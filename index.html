@@ -443,6 +443,10 @@
                         <span class="tab-text-ar">التَّرْكِيبُ الثَّانِي</span>
                         <span class="tab-text-en">Second Structure</span>
                     </button>
+                    <button class="tab-btn" onclick="openTab('tab3', this)">
+                        <span class="tab-text-ar">التَّرْكِيبُ الثَّالِثُ</span>
+                        <span class="tab-text-en">Third Structure</span>
+                    </button>
                 </nav>
             </div>
 
@@ -535,6 +539,61 @@
 
                 <div class="assembled-sentence">
                     أَنَا أُحِبُّ أَفْلَامَ <span class="blue-word">الْحَرَكَةِ</span> <span class="red-word">لِأَنَّهَا</span> <span class="blue-word">مَلِيئَةٌ بِالْإِثَارَةِ وَالتَّشْوِيقِ</span>.
+                </div>
+            </div>
+
+            <div id="tab3" class="tab-pane">
+                
+                <div class="interactive-sentence" title="اضغط للاستماع" onclick="playSentence('tab3')">
+                    <span class="speaker-icon">🔊</span>
+                    <span class="word-hover blue-word" data-en="Usually">عَادَةً</span>
+                    <span class="word-hover normal-word" data-en="every">كُلَّ</span>
+                    <span class="word-hover target-word" data-en="[Time]">........</span>
+                    <span class="word-hover normal-word" data-en=",">،</span>
+                    <span class="word-hover normal-word" data-en="I watch">أُشَاهِدُ</span>
+                    <span class="word-hover normal-word" data-en="I">أَنَا</span>
+                    <span class="word-hover normal-word" data-en="and">وَ</span>
+                    <span class="word-hover target-word" data-en="[Person]">........</span>
+                    <span class="word-hover normal-word" data-en="a movie">فِيلْمًا</span>
+                    <span class="word-hover target-word" data-en="[Type]">........</span>
+                    <span class="word-hover normal-word" data-en="on">عَلَى</span>
+                    <span class="word-hover normal-word" data-en="screen">شَاشَةِ</span>
+                    <span class="word-hover normal-word" data-en="the TV">التِّلْفَازِ</span>
+                    <span class="word-hover red-word" data-en="where">حَيْثُ</span>
+                    <span class="word-hover normal-word" data-en="we gather">نَجْتَمِعُ</span>
+                    <span class="word-hover normal-word" data-en="in">فِي</span>
+                    <span class="word-hover normal-word" data-en="the living room">غُرْفَةِ الْمَعِيشَةِ</span>
+                    <span class="word-hover normal-word" data-en="to spend">لِنَقْضِيَ</span>
+                    <span class="word-hover normal-word" data-en="an enjoyable time">وَقْتًا مُمْتِعًا</span>
+                    <span class="word-hover normal-word" data-en="together">مَعًا.</span>
+                </div>
+                
+                <div class="vocab-grid-3col">
+                    <div class="vocab-col">
+                        <div class="vocab-card" onclick="playVocab(this)"><span class="vocab-ar">يَوْمِ جُمُعَةٍ</span><span class="vocab-en">Friday</span></div>
+                        <div class="vocab-card" onclick="playVocab(this)"><span class="vocab-ar">سَبْتٍ</span><span class="vocab-en">Saturday</span></div>
+                        <div class="vocab-card" onclick="playVocab(this)"><span class="vocab-ar">أَحَدٍ</span><span class="vocab-en">Sunday</span></div>
+                        <div class="vocab-card" onclick="playVocab(this)"><span class="vocab-ar">مَسَاءِ</span><span class="vocab-en">Evening</span></div>
+                        <div class="vocab-card" onclick="playVocab(this)"><span class="vocab-ar">نِهَايَةِ أُسْبُوعٍ</span><span class="vocab-en">Weekend</span></div>
+                    </div>
+                    <div class="vocab-col">
+                        <div class="vocab-card" onclick="playVocab(this)"><span class="vocab-ar">عَائِلَتِي</span><span class="vocab-en">My family</span></div>
+                        <div class="vocab-card" onclick="playVocab(this)"><span class="vocab-ar">أُمِّي</span><span class="vocab-en">My mother</span></div>
+                        <div class="vocab-card" onclick="playVocab(this)"><span class="vocab-ar">أُسْرَتِي</span><span class="vocab-en">My family</span></div>
+                        <div class="vocab-card" onclick="playVocab(this)"><span class="vocab-ar">أَخِي</span><span class="vocab-en">My brother</span></div>
+                        <div class="vocab-card" onclick="playVocab(this)"><span class="vocab-ar">أُخْتِي</span><span class="vocab-en">My sister</span></div>
+                        <div class="vocab-card" onclick="playVocab(this)"><span class="vocab-ar">أَصْدِقَائِي</span><span class="vocab-en">My friends</span></div>
+                    </div>
+                    <div class="vocab-col">
+                        <div class="vocab-card" onclick="playVocab(this)"><span class="vocab-ar">كُومِيدِيًّا</span><span class="vocab-en">Comedy</span></div>
+                        <div class="vocab-card" onclick="playVocab(this)"><span class="vocab-ar">حَرَكِيًّا</span><span class="vocab-en">Action</span></div>
+                        <div class="vocab-card" onclick="playVocab(this)"><span class="vocab-ar">دِرَامِيًّا</span><span class="vocab-en">Drama</span></div>
+                        <div class="vocab-card" onclick="playVocab(this)"><span class="vocab-ar">خَيَالِيًّا</span><span class="vocab-en">Science fiction</span></div>
+                    </div>
+                </div>
+
+                <div class="assembled-sentence">
+                    <span class="blue-word">عَادَةً</span> كُلَّ يَوْمِ جُمُعَةٍ، أُشَاهِدُ أَنَا <span class="blue-word">وَعَائِلَتِي</span> فِيلْمًا <span class="blue-word">كُومِيدِيًّا</span> عَلَى شَاشَةِ التِّلْفَازِ <span class="red-word">حَيْثُ</span> نَجْتَمِعُ فِي غُرْفَةِ الْمَعِيشَةِ لِنَقْضِيَ وَقْتًا مُمْتِعًا مَعًا.
                 </div>
             </div>
 
