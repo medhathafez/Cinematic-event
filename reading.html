@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="ar" translate="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google" content="notranslate">
+    <title>Reading Activity - Free Time</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Simplified Arabic', 'Calibri', 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: #e2e8f0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            overflow-y: auto;
+            padding: 2vh 2vw;
+        }
+
+        .app-container {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            max-width: 1200px;
+            min-height: 90vh;
+            height: auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            overflow: hidden;
+            direction: ltr; 
+        }
+
+        /* --- تخصيص شريط التمرير (Scrollbar) --- */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9; 
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #3b82f6; 
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #2563eb; 
+        }
+
+        /* --- لوحة التحكم --- */
+        .controls-panel {
+            width: 280px; 
+            background: #f8fafc;
+            border-right: 2px solid #e2e8f0;
+            padding: 2vh 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5vh;
+            justify-content: center;
+            align-items: center;
+            overflow-y: auto; 
+        }
+
+        .instructions-text {
+            font-size: 14px;
+            color: #475569;
+            line-height: 1.5;
+            text-align: left;
+            width: 100%;
+            background: #e2e8f0;
+            padding: 8px;
+            border-radius: 8px;
+            font-family: 'Calibri', 'Arial', sans-serif;
+        }
+
+        .instructions-bottom {
+            text-align: center;
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .speed-controls {
+            display: flex;
+            gap: 4px;
+            background: #e2e8f0;
+            padding: 4px;
+            border-radius: 20px;
+            width: 100%;
+            margin-bottom: 1vh;
+        }
+        .speed-btn {
+            flex: 1;
+            padding: 0.5rem 0;
+            border: none;
+            border-radius: 16px;
+            background: transparent;
+            color: #475569;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.9rem;
+            font-family: 'Calibri', 'Arial', sans-serif;
+        }
+        .speed-btn.active { background: white; color: #0f172a; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+
+        hr { border: 0; height: 1px; background: #cbd5e1; width: 80%; margin: 1vh 0; }
+
+        .btn-wrapper {
+            position: relative;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 60px; 
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            letter-spacing: 0.5px;
+            font-family: 'Calibri', 'Arial', sans-serif;
+        }
+
+        .tooltip {
+            position: absolute;
+            bottom: 115%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #0f172a;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s ease;
+            pointer-events: none;
+            z-index: 20;
+            font-weight: normal;
+            font-family: 'Calibri', 'Arial', sans-serif;
+        }
+        .tooltip::after {
+            content: ''; position: absolute; top: 100%; left: 50%;
+            transform: translateX(-50%); border-width: 5px; border-style: solid;
+            border-color: #0f172a transparent transparent transparent;
+        }
+        .btn-wrapper:hover .tooltip { opacity: 1; visibility: visible; bottom: 125%; }
+
+        .btn-listen { background: #3b82f6; color: white; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3); }
+        .btn-listen:hover { transform: scale(1.02); opacity: 0.9; }
+
+        .btn-record { background: #e2e8f0; color: #334155; }
+        .btn-record:hover { background: #cbd5e1; }
+        .btn-record.recording {
+            background: #ef4444; color: white;
+            animation: pulseRecord 1.5s infinite;
+        }
+
+        .btn-play-mine { display: none; background: #f59e0b; color: white; }
+        .btn-play-mine.show { display: flex; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3); }
+        .btn-play-mine:hover { background: #d97706; transform: scale(1.02); }
+
+        .btn-submit { background: #10b981; color: white; opacity: 0.4; cursor: not-allowed; }
+        .btn-submit.ready { opacity: 1; cursor: pointer; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); }
+        .btn-submit.ready:hover { background: #059669; transform: scale(1.02); }
+
+        @keyframes pulseRecord {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.5); }
+            70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+
+        /* --- مساحة النص --- */
+        .text-panel {
+            flex-grow: 1;
+            padding: 4vh 4vw;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: stretch;
+            direction: rtl; 
+            background: #ffffff;
+            overflow-y: auto; 
+        }
+
+        .reading-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            align-content: flex-start;
+            gap: 1.5vh 0.5vw;
+            width: 100%;
+            max-width: 950px;
+            margin: 0 auto;
+            padding-bottom: 4vh;
+        }
+
+        .word {
+            position: relative;
+            cursor: pointer;
+            padding: 0 3px;
+            border-radius: 4px;
+            font-family: 'Simplified Arabic', sans-serif !important;
+            font-size: 26px; 
+            font-size: clamp(20px, 3.2vw, 32px);
+            font-weight: bold;
+            transition: background-color 0.2s, transform 0.2s;
+            line-height: 1.5;
+        }
+
+        .word.highlight {
+            background-color: rgba(255, 235, 59, 0.8);
+            color: #000 !important;
+            transform: scale(1.1);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            z-index: 2;
+        }
+
+        .word::after {
+            content: attr(data-en);
+            position: absolute; bottom: 100%; left: 50%;
+            transform: translateX(-50%) translateY(5px);
+            background: #0f172a; color: #fff; padding: 4px 8px;
+            border-radius: 6px; font-size: 14px; white-space: nowrap;
+            opacity: 0; visibility: hidden; transition: 0.2s;
+            pointer-events: none; font-family: 'Calibri', 'Arial', sans-serif !important; font-weight: normal; direction: ltr; z-index: 10;
+        }
+        .word:hover::after { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(-2px); }
+
+        @media (max-width: 800px) {
+            .app-container { flex-direction: column; min-height: 100vh; }
+            .controls-panel { width: 100%; flex-direction: row; flex-wrap: wrap; border-right: none; border-bottom: 2px solid #e2e8f0; padding: 2vh; justify-content: space-around; gap: 1vh;}
+            .btn-wrapper { width: 48%; }
+            .instructions-text { width: 100%; text-align: center; margin-bottom: 1vh; }
+            .speed-controls { width: 100%; order: -1; margin-bottom: 1vh; }
+            hr { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <aside class="controls-panel">
+            <div class="instructions-text">
+                • Hover over words for translation.<br>
+                • Click any word to hear its correct pronunciation.<br>
+                • Listen at your chosen speed.<br>
+                • If audio fails, install the Arabic language on your device.
+            </div>
+
+            <div class="speed-controls">
+                <button class="speed-btn" onclick="setSpeed(0.5, this)">Slow</button>
+                <button class="speed-btn active" onclick="setSpeed(0.9, this)">Normal</button>
+                <button class="speed-btn" onclick="setSpeed(1.5, this)">Fast</button>
+            </div>
+            
+            <div class="btn-wrapper">
+                <span class="tooltip">Read full text aloud</span>
+                <button id="btn-listen" class="btn btn-listen" onclick="toggleListen()">Listen 🔊</button>
+            </div>
+            
+            <hr>
+            
+            <div class="btn-wrapper">
+                <span class="tooltip">Click to record your voice</span>
+                <button id="btn-record" class="btn btn-record" onclick="toggleRecording()">Record 🎤</button>
+            </div>
+
+            <div class="btn-wrapper">
+                <span class="tooltip">Listen to your recording</span>
+                <button id="btn-play-mine" class="btn btn-play-mine" onclick="playMyRecording()">Play 🎧</button>
+            </div>
+            
+            <div class="btn-wrapper">
+                <span class="tooltip">Save recording to device</span>
+                <button id="btn-submit" class="btn btn-submit" disabled onclick="downloadRecording()">Submit 📤</button>
+            </div>
+
+            <div class="instructions-text instructions-bottom">
+                Clicking <b>Submit</b> downloads your audio file. Send it to your teacher via the Google Classroom assignment.
+            </div>
+        </aside>
+
+        <main class="text-panel">
+            <div id="reading-text-container" class="reading-content"></div>
+        </main>
+    </div>
+
+    <script>
+        const textData = [
+            {ar: "آدَمُ :", en: "Adam:", color: "#333", speaker: "male"},
+            {ar: "عَادَةً", en: "usually", color: "#0284c7", speaker: "male"},
+            {ar: "فِي", en: "in", color: "#333", speaker: "male"},
+            {ar: "وَقْتِ", en: "time", color: "#333", speaker: "male"},
+            {ar: "فَرَاغِي،", en: "my free,", color: "#333", speaker: "male"},
+            {ar: "أَذْهَبُ", en: "I go", color: "#333", speaker: "male"},
+            {ar: "إِلَى", en: "to", color: "#333", speaker: "male"},
+            {ar: "السِّينَمَا", en: "the cinema", color: "#333", speaker: "male"},
+            {ar: "مَعَ", en: "with", color: "#333", speaker: "male"},
+            {ar: "أَصْدِقَائِي", en: "my friends", color: "#333", speaker: "male"},
+            {ar: "لِنُشَاهِدَ", en: "to watch", color: "#333", speaker: "male"},
+            {ar: "الْأَفْلَامَ", en: "movies", color: "#333", speaker: "male"},
+            {ar: "الْمُثِيرَةَ.", en: "exciting.", color: "#333", speaker: "male"},
+            {ar: "<br>", en: "", color: ""},
+            {ar: "أَنَا", en: "I", color: "#333", speaker: "male"},
+            {ar: "أُحِبُّ", en: "love", color: "#333", speaker: "male"},
+            {ar: "أَفْلَامَ", en: "movies", color: "#333", speaker: "male"},
+            {ar: "الْحَرَكَةِ", en: "action", color: "#333", speaker: "male"},
+            {ar: "وَالْمُغَامَرَةِ", en: "and adventure", color: "#333", speaker: "male"},
+            {ar: "لِأَنَّهَا", en: "because they are", color: "#dc2626", speaker: "male"},
+            {ar: "مَلِيئَةٌ", en: "full", color: "#333", speaker: "male"},
+            {ar: "بِالْإِثَارَةِ", en: "of excitement", color: "#333", speaker: "male"},
+            {ar: "وَالتَّشْوِيقِ،", en: "and thrill,", color: "#333", speaker: "male"},
+            {ar: "عَلَى", en: "on", color: "#dc2626", speaker: "male"},
+            {ar: "الْعَكْسِ", en: "the contrary", color: "#dc2626", speaker: "male"},
+            {ar: "تَمَامًا", en: "completely", color: "#dc2626", speaker: "male"},
+            {ar: "أَصْدِقَائِي", en: "my friends", color: "#333", speaker: "male"},
+            {ar: "يُحِبُّونَ", en: "love", color: "#333", speaker: "male"},
+            {ar: "الْأَفْلَامَ", en: "movies", color: "#333", speaker: "male"},
+            {ar: "الْكُومِيدِيَّةَ", en: "comedy", color: "#333", speaker: "male"},
+            {ar: "لِأَنَّهَا", en: "because they are", color: "#dc2626", speaker: "male"},
+            {ar: "مُضْحِكَةٌ", en: "funny", color: "#333", speaker: "male"},
+            {ar: "وَمُسَلِّيَةٌ.", en: "and entertaining.", color: "#333", speaker: "male"},
+            {ar: "<br>", en: "", color: ""},
+            {ar: "<br>", en: "", color: ""},
+            {ar: "سَارَةُ :", en: "Sarah:", color: "#333", speaker: "female"},
+            {ar: "عَادَةً", en: "usually", color: "#0284c7", speaker: "female"},
+            {ar: "كُلَّ", en: "every", color: "#333", speaker: "female"},
+            {ar: "جُمُعَةٍ،", en: "Friday,", color: "#333", speaker: "female"},
+            {ar: "أُشَاهِدُ", en: "I watch", color: "#333", speaker: "female"},
+            {ar: "أَنَا", en: "I", color: "#333", speaker: "female"},
+            {ar: "وَعَائِلَتِي", en: "and my family", color: "#333", speaker: "female"},
+            {ar: "فِيلْمًا", en: "a movie", color: "#333", speaker: "female"},
+            {ar: "كُومِيدِيًّا", en: "comedic", color: "#333", speaker: "female"},
+            {ar: "عَلَى", en: "on", color: "#333", speaker: "female"},
+            {ar: "شَاشَةِ", en: "screen", color: "#333", speaker: "female"},
+            {ar: "التِّلْفَازِ", en: "the TV", color: "#333", speaker: "female"},
+            {ar: "حَيْثُ", en: "where", color: "#dc2626", speaker: "female"},
+            {ar: "نَجْتَمِعُ", en: "we gather", color: "#333", speaker: "female"},
+            {ar: "فِي", en: "in", color: "#333", speaker: "female"},
+            {ar: "غُرْفَةِ", en: "room", color: "#333", speaker: "female"},
+            {ar: "الْمَعِيشَةِ", en: "living", color: "#333", speaker: "female"},
+            {ar: "لِنَقْضِيَ", en: "to spend", color: "#333", speaker: "female"},
+            {ar: "وَقْتًا", en: "time", color: "#333", speaker: "female"},
+            {ar: "مُمْتِعًا", en: "enjoyable", color: "#333", speaker: "female"},
+            {ar: "مَعًا.", en: "together.", color: "#333", speaker: "female"},
+            {ar: "<br>", en: "", color: ""},
+            {ar: "نُحِبُّ", en: "We love", color: "#333", speaker: "female"},
+            {ar: "الْأَفْلَامَ", en: "movies", color: "#333", speaker: "female"},
+            {ar: "الْكُومِيدِيَّةَ", en: "comedy", color: "#333", speaker: "female"},
+            {ar: "وَعَلَى", en: "and on", color: "#dc2626", speaker: "female"},
+            {ar: "الْعَكْسِ", en: "the contrary", color: "#dc2626", speaker: "female"},
+            {ar: "تَمَامًا", en: "completely", color: "#dc2626", speaker: "female"},
+            {ar: "نَكْرَهُ", en: "we hate", color: "#333", speaker: "female"},
+            {ar: "أَفْلَامَ", en: "movies", color: "#333", speaker: "female"},
+            {ar: "الرُّعْبِ", en: "horror", color: "#333", speaker: "female"},
+            {ar: "لِأَنَّهَا", en: "because they are", color: "#dc2626", speaker: "female"},
+            {ar: "مُخِيفَةٌ.", en: "scary.", color: "#333", speaker: "female"}
+        ];
+
+        const container = document.getElementById('reading-text-container');
+        let htmlContent = '';
+        textData.forEach((item, index) => {
+            if (item.ar === '<br>') {
+                htmlContent += `<div class="line-break" style="flex-basis: 100%; height: 2vh;"></div>`;
+            } else {
+                htmlContent += `<span id="word-${index}" class="word" data-en="${item.en}" data-speaker="${item.speaker}" style="color: ${item.color};" onclick="speakWord('${item.ar.replace(/[،.!؛:]/g, '')}', '${item.speaker}')">${item.ar}</span>`;
+            }
+        });
+        container.innerHTML = htmlContent;
+
+        let currentSpeed = 0.9;
+        let isRecording = false;
+        let isReadingFullText = false;
+        const btnListen = document.getElementById('btn-listen');
+
+        function setSpeed(speed, btnElement) {
+            currentSpeed = speed;
+            document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
+            btnElement.classList.add('active');
+            if (isReadingFullText) {
+                window.speechSynthesis.cancel();
+                resetListenButton();
+            }
+        }
+
+        // دالة لاختيار الصوت بناءً على النوع (ذكر/أنثى)
+        function getArabicVoice(gender) {
+            const voices = window.speechSynthesis.getVoices();
+            const arabicVoices = voices.filter(v => v.lang.includes('ar'));
+            if (arabicVoices.length <= 1) return arabicVoices[0]; // إذا كان هناك صوت واحد فقط
+
+            if (gender === 'female') {
+                // محاولة إيجاد صوت أنثوي بأسماء شائعة
+                return arabicVoices.find(v => v.name.toLowerCase().includes('laila') || v.name.toLowerCase().includes('mouna') || v.name.toLowerCase().includes('female') || v.name.toLowerCase().includes('zira')) || arabicVoices[1];
+            } else {
+                // محاولة إيجاد صوت ذكوري
+                return arabicVoices.find(v => v.name.toLowerCase().includes('maged') || v.name.toLowerCase().includes('tarik') || v.name.toLowerCase().includes('male')) || arabicVoices[0];
+            }
+        }
+
+        function speakWord(wordText, speaker) {
+            if (isRecording || !('speechSynthesis' in window)) return;
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(wordText);
+            utterance.lang = 'ar-SA';
+            utterance.rate = currentSpeed;
+            utterance.voice = getArabicVoice(speaker);
+            window.speechSynthesis.speak(utterance);
+        }
+
+        async function toggleListen() {
+            if (isRecording || !('speechSynthesis' in window)) return;
+            if (isReadingFullText) {
+                window.speechSynthesis.cancel();
+                resetListenButton();
+                return;
+            }
+
+            isReadingFullText = true;
+            btnListen.innerHTML = 'Stop ⏹️';
+            btnListen.style.backgroundColor = '#ef4444';
+
+            // تقسيم النص لمجموعتين: آدم ثم سارة لتغيير الصوت
+            const adamText = textData.filter(i => i.speaker === 'male' && i.ar !== '<br>').map(i => i.ar).join(' ');
+            const sarahText = textData.filter(i => i.speaker === 'female' && i.ar !== '<br>').map(i => i.ar).join(' ');
+
+            const utterAdam = new SpeechSynthesisUtterance(adamText);
+            utterAdam.lang = 'ar-SA';
+            utterAdam.rate = currentSpeed;
+            utterAdam.voice = getArabicVoice('male');
+
+            const utterSarah = new SpeechSynthesisUtterance(sarahText);
+            utterSarah.lang = 'ar-SA';
+            utterSarah.rate = currentSpeed;
+            utterSarah.voice = getArabicVoice('female');
+
+            // وظيفة التظليل أثناء القراءة
+            const highlightWords = (utterance, offset) => {
+                utterance.onboundary = (event) => {
+                    if (event.name === 'word') {
+                        document.querySelectorAll('.word').forEach(el => el.classList.remove('highlight'));
+                        // حساب التقريبي للكلمة الحالية للتظليل
+                        const wordsInUtterance = utterance.text.split(' ');
+                        let charCount = 0;
+                        for (let i = 0; i < wordsInUtterance.length; i++) {
+                            charCount += wordsInUtterance[i].length + 1;
+                            if (charCount > event.charIndex) {
+                                const wordEl = document.getElementById('word-' + (i + offset));
+                                if (wordEl) wordEl.classList.add('highlight');
+                                break;
+                            }
+                        }
+                    }
+                };
+            };
+
+            // تشغيل جزء آدم ثم سارة
+            highlightWords(utterAdam, 0);
+            utterAdam.onend = () => {
+                if(isReadingFullText) {
+                    highlightWords(utterSarah, 35); // يبدأ جزء سارة من الفهرس 35 تقريباً
+                    window.speechSynthesis.speak(utterSarah);
+                }
+            };
+            utterSarah.onend = resetListenButton;
+
+            window.speechSynthesis.speak(utterAdam);
+        }
+
+        function resetListenButton() {
+            isReadingFullText = false;
+            btnListen.innerHTML = 'Listen 🔊';
+            btnListen.style.backgroundColor = '';
+            document.querySelectorAll('.word').forEach(el => el.classList.remove('highlight'));
+        }
+
+        // --- نظام التسجيل (لا تغيير فيه) ---
+        let mediaRecorder, audioChunks = [], audioUrl = null, studentAudio = new Audio();
+        const btnRecord = document.getElementById('btn-record'), btnPlayMine = document.getElementById('btn-play-mine'), btnSubmit = document.getElementById('btn-submit');
+
+        async function toggleRecording() {
+            if (!isRecording) {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    mediaRecorder = new MediaRecorder(stream);
+                    audioChunks = [];
+                    mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+                    mediaRecorder.onstop = () => {
+                        audioUrl = URL.createObjectURL(new Blob(audioChunks, { type: 'audio/webm' }));
+                        studentAudio.src = audioUrl;
+                        btnPlayMine.classList.add('show');
+                        btnSubmit.disabled = false;
+                        btnSubmit.classList.add('ready');
+                    };
+                    window.speechSynthesis.cancel();
+                    resetListenButton();
+                    mediaRecorder.start();
+                    isRecording = true;
+                    btnRecord.innerHTML = 'Stop ⏹️';
+                    btnRecord.classList.add('recording');
+                } catch (err) { alert("Microphone access denied."); }
+            } else {
+                mediaRecorder.stop();
+                isRecording = false;
+                btnRecord.innerHTML = 'Record 🎤';
+                btnRecord.classList.remove('recording');
+                mediaRecorder.stream.getTracks().forEach(t => t.stop());
+            }
+        }
+
+        function playMyRecording() {
+            if (studentAudio.paused) { studentAudio.play(); btnPlayMine.innerHTML = 'Pause ⏸️'; window.speechSynthesis.cancel(); resetListenButton(); }
+            else { studentAudio.pause(); btnPlayMine.innerHTML = 'Play 🎧'; }
+        }
+        studentAudio.onended = () => btnPlayMine.innerHTML = 'Play 🎧';
+        function downloadRecording() { if (audioUrl) { const a = document.createElement('a'); a.href = audioUrl; a.download = 'Reading_Activity.webm'; a.click(); } }
+    </script>
+</body>
+</html>
