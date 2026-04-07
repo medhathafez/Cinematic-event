@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google" content="notranslate">
-    <title>نشاط القراءة والفهم - الرياضة</title>
+    <title>نشاط القراءة والفهم - السينما والتلفاز</title>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
@@ -15,7 +15,7 @@
             font-family: 'Simplified Arabic', 'Traditional Arabic', Tahoma, serif;
             background-color: #f3f4f6;
             color: #1f2937;
-            padding: 20px;
+            padding: 10px;
         }
 
         #main-content { 
@@ -26,30 +26,30 @@
         
         #capture-area {
             background-color: #ffffff;
-            padding: 30px;
-            border-radius: 15px;
+            padding: 20px;
+            border-radius: 12px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             width: 100%;
         }
 
         /* تعليمات القراءة */
         .instruction-box {
             text-align: center;
-            margin-bottom: 25px;
+            margin-bottom: 15px;
             background-color: #eff6ff;
-            padding: 15px;
-            border-radius: 10px;
+            padding: 10px;
+            border-radius: 8px;
             border: 2px solid #bfdbfe;
         }
         .arabic-inst {
-            font-size: 32px;
+            font-size: 26px;
             font-weight: bold;
             color: #1e40af;
             margin-bottom: 5px;
         }
         .english-inst {
-            font-size: 22px;
+            font-size: 18px;
             color: #4b5563;
             direction: ltr;
             font-family: sans-serif;
@@ -57,50 +57,65 @@
         }
 
         .reading-text {
-            font-size: 28px; 
-            line-height: 2.2;
+            font-size: 22px; 
+            line-height: 1.8;
             background-color: #fffbeb;
-            padding: 25px;
-            border-radius: 10px;
+            padding: 15px;
+            border-radius: 8px;
             border-right: 6px solid #f59e0b;
-            margin-bottom: 35px;
+            margin-bottom: 20px;
             text-align: justify;
             font-weight: bold;
         }
+        
+        .reading-text p {
+            margin-bottom: 10px;
+        }
+        .reading-text p:last-child {
+            margin-bottom: 0;
+        }
 
         .question-card {
-            margin-bottom: 30px;
-            padding: 25px;
+            margin-bottom: 15px;
+            padding: 15px;
             background: #f9fafb;
-            border-radius: 10px;
+            border-radius: 8px;
             border: 1px solid #e5e7eb;
             width: 100%;
         }
 
         .question-title {
-            font-size: 26px; 
+            font-size: 22px; 
             font-weight: bold; 
-            margin-bottom: 20px; 
+            margin-bottom: 12px; 
             color: #111827;
         }
 
-        /* تنسيقات الخيارات المتعددة */
+        /* تنسيقات الخيارات في نفس السطر */
+        .options-wrapper {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
         .option-label {
-            display: block; 
-            padding: 15px 20px; 
-            margin-bottom: 15px;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px; 
             background-color: #ffffff; 
             border: 2px solid #d1d5db;
             border-radius: 8px; 
             cursor: pointer; 
             transition: all 0.2s;
-            font-size: 24px; 
+            font-size: 20px; 
             font-weight: bold; 
-            line-height: 1.8;
+            line-height: 1.5;
         }
         
         .option-label:hover { border-color: #9ca3af; background-color: #f3f4f6; }
-        input[type="radio"] { margin-left: 15px; transform: scale(1.5); cursor: pointer; }
+        input[type="radio"] { margin-left: 10px; transform: scale(1.3); cursor: pointer; }
         input[type="radio"]:checked + span { color: #2563eb; }
         .option-label.selected { border-color: #2563eb; background-color: #eff6ff; }
 
@@ -110,9 +125,9 @@
 
         .submit-btn {
             background-color: #10b981; color: white; border: none;
-            padding: 15px 40px; border-radius: 50px; font-size: 26px;
+            padding: 12px 30px; border-radius: 50px; font-size: 22px;
             font-weight: bold; cursor: pointer; display: block;
-            margin: 0 auto; width: 100%; max-width: 350px;
+            margin: 0 auto; width: 100%; max-width: 300px;
             font-family: 'Simplified Arabic', serif;
         }
         .submit-btn:hover { background-color: #059669; }
@@ -120,27 +135,28 @@
         #result-box {
             display: none;
             text-align: center;
-            margin-top: 25px;
-            padding: 20px;
-            border-radius: 10px;
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
             background-color: #1e40af;
             color: white;
             font-family: sans-serif;
-            font-size: 28px;
+            font-size: 24px;
             font-weight: bold;
             direction: ltr;
         }
 
         @media (max-width: 600px) {
-            body { padding: 10px; }
-            #capture-area { padding: 15px; }
-            .arabic-inst { font-size: 24px; }
-            .english-inst { font-size: 18px; }
-            .reading-text { font-size: 22px; }
-            .question-title { font-size: 22px; }
-            .option-label { font-size: 20px; padding: 12px; }
-            .submit-btn { font-size: 22px; }
-            input[type="radio"] { transform: scale(1.2); }
+            #capture-area { padding: 12px; }
+            .arabic-inst { font-size: 22px; }
+            .english-inst { font-size: 16px; }
+            .reading-text { font-size: 18px; padding: 12px; }
+            .question-card { padding: 12px; margin-bottom: 12px; }
+            .question-title { font-size: 18px; margin-bottom: 10px; }
+            .options-wrapper { gap: 10px; }
+            .option-label { font-size: 16px; padding: 8px; }
+            .submit-btn { font-size: 20px; padding: 10px 20px; }
+            input[type="radio"] { transform: scale(1.1); margin-left: 5px; }
         }
     </style>
 </head>
@@ -150,12 +166,13 @@
         <div id="capture-area">
             
             <div class="instruction-box">
-                <p class="arabic-inst">اِقْرَأْ جَيِّدًا ثُمَّ أَجِبْ عَنِ الْأَسْئِلَةِ التَّالِيَةِ</p>
-                <p class="english-inst">Read carefully, then answer the following questions</p>
+                <p class="arabic-inst">اِخْتَرْ: صَحِيح (T) أَوْ خَطَأ (F) لِلْجُمَلِ التَّالِيَةِ عَنْ آدَم وَمَرْيَم (سَارَة)</p>
+                <p class="english-inst">Read carefully, then choose True or False (T OR F)</p>
             </div>
 
             <div class="reading-text">
-                جَدِيرٌ بِالذِّكْرِ أَنَّ الشَّهْرَ الْمَاضِيَ أَقَامَتْ مَدْرَسَةُ كُلِّيَّةِ جُمِيرَا الْيَوْمَ الرِّيَاضِيَّ فِي الْمَدِينَةِ الرِّيَاضِيَّةِ فِي دُبَي، وَكَانَ يَوْمًا رَائِعًا وَمُمْتِعًا لِلْغَايَةِ. وَمِنَ الْمُدْهِشِ أَنَّنِي شَارَكْتُ فِي مُسَابَقَةِ الْجَرْيِ، وَفُزْتُ بِالْمَرْكَزِ الْأَوَّلِ، كَمَا أَنَّنِي حَصَلْتُ عَلَى الْمِيدَالِيَّةِ الذَّهَبِيَّةِ، لَكِنْ لِسُوءِ الْحَظِّ خَسِرَ صَدِيقِي فِي الْمُسَابَقَةِ وَلَمْ يَحْصُلْ عَلَى أَيِّ مِيدَالِيَّةٍ؛ لِأَنَّهُ لَمْ يَتَدَرَّبْ جَيِّدًا. أَرْجُو أَنْ أُشَارِكَ مَرَّةً أُخْرَى الْعَامَ الْقَادِمَ. فِي رَأْيِي، الْيَوْمُ الرِّيَاضِيُّ أَمْتَعُ مِنَ الْيَوْمِ الدِّرَاسِيِّ.
+                <p style="color: #1e3a8a;"><strong>آدَمُ :</strong> عَادَةً فِي وَقْتِ فَرَاغِي، أَذْهَبُ إِلَى السِّينَمَا مَعَ أَصْدِقَائِي لِنُشَاهِدَ الْأَفْلَامَ الْمُثِيرَةَ. أَنَا أُحِبُّ أَفْلَامَ الْحَرَكَةِ وَالْمُغَامَرَةِ لِأَنَّهَا مَلِيئَةٌ بِالْإِثَارَةِ وَالتَّشْوِيقِ، عَلَى الْعَكْسِ تَمَامًا أَصْدِقَائِي يُحِبُّونَ الْأَفْلَامَ الْكُومِيدِيَّةَ لِأَنَّهَا مُضْحِكَةٌ وَمُسَلِّيَةٌ.</p>
+                <p style="color: #991b1b;"><strong>سَارَةُ :</strong> عَادَةً كُلَّ جُمُعَةٍ، أُشَاهِدُ أَنَا وَعَائِلَتِي فِيلْمًا كُومِيدِيًّا عَلَى شَاشَةِ التِّلْفَازِ حَيْثُ نَجْتَمِعُ فِي غُرْفَةِ الْمَعِيشَةِ لِنُقْضِيَ وَقْتًا مُمْتِعًا مَعًا. نُحِبُّ الْأَفْلَامَ الْكُومِيدِيَّةَ وَعَلَى الْعَكْسِ تَمَامًا نَكْرَهُ أَفْلَامَ الرُّعْبِ لِأَنَّهَا مُخِيفَةٌ.</p>
             </div>
 
             <div id="quiz-container"></div>
@@ -169,48 +186,59 @@
     <script>
         const questionsData = [
             {
-                question: "أَيْنَ أُقِيمَ الْيَوْمُ الرِّيَاضِيُّ؟",
+                question: "يَذْهَبُ آدَمُ إِلَى السِّينَمَا مَعَ أُسْرَتِهِ.",
                 options: [
-                    { text: "أُقِيمَ الْيَوْمُ الرِّيَاضِيُّ فِي الْمَدِينَةِ الرِّيَاضِيَّةِ فِي مَدِينَةِ دُبَي.", correct: true },
-                    { text: "أُقِيمَ الْيَوْمُ الرِّيَاضِيُّ فِي مَلْعَبِ الْمَدْرَسَةِ الدَّاخِلِيِّ الْمُغْلَقِ.", correct: false },
-                    { text: "أُقِيمَ الْيَوْمُ الرِّيَاضِيُّ فِي حَدِيقَةِ الْحَيِّ الْمُجَاوِرَةِ لِلْمَدْرَسَةِ.", correct: false },
-                    { text: "أُقِيمَ الْيَوْمُ الرِّيَاضِيُّ فِي نَادِي الرِّيَاضَةِ بِإِمَارَةِ أَبُو ظَبْي.", correct: false }
+                    { text: "صَحِيح (True)", correct: false },
+                    { text: "خَطَأ (False)", correct: true }
                 ]
             },
             {
-                question: "كَيْفَ كَانَ الْيَوْمُ الرِّيَاضِيُّ حَسَبَ وَصْفِ الْكَاتِبِ؟",
+                question: "يُحِبُّ آدَمُ أَفْلَامَ الْحَرَكَةِ.",
                 options: [
-                    { text: "كَانَ الْيَوْمُ الرِّيَاضِيُّ يَوْمًا مُمِلًّا وَمُتْعِبًا جِدًّا لِلْجَمِيعِ.", correct: false },
-                    { text: "كَانَ الْيَوْمُ الرِّيَاضِيُّ يَوْمًا عَادِيًّا لَمْ يَحْدُثْ فِيهِ شَيْءٌ مُمَيَّزٌ.", correct: false },
-                    { text: "كَانَ الْيَوْمُ الرِّيَاضِيُّ يَوْمًا رَائِعًا وَمُمْتِعًا لِلْغَايَةِ.", correct: true },
-                    { text: "كَانَ الْيَوْمُ الرِّيَاضِيُّ يَوْمًا حَزِينًا بِسَبَبِ خَسَارَةِ صَدِيقِهِ فَقَطْ.", correct: false }
+                    { text: "صَحِيح (True)", correct: true },
+                    { text: "خَطَأ (False)", correct: false }
                 ]
             },
             {
-                question: "مَا الْمُسَابَقَةُ الَّتِي شَارَكَ فِيهَا الطَّالِبُ الْمُتَحَدِّثُ؟",
+                question: "يَذْهَبُ آدَمُ إِلَى السِّينَمَا فِي وَقْتِ فَرَاغِهِ.",
                 options: [
-                    { text: "شَارَكَ الطَّالِبُ فِي مُسَابَقَةِ كُرَةِ الْقَدَمِ مَعَ فَرِيقِ الْمَدْرَسَةِ.", correct: false },
-                    { text: "شَارَكَ الطَّالِبُ فِي مُسَابَقَةِ الْجَرْيِ وَفَازَ بِالْمَرْكَزِ الْأَوَّلِ.", correct: true },
-                    { text: "شَارَكَ الطَّالِبُ فِي مُسَابَقَةِ السِّبَاحَةِ وَحَصَلَ عَلَى مِيدَالِيَّةٍ فِضِّيَّةٍ.", correct: false },
-                    { text: "شَارَكَ الطَّالِبُ فِي مُسَابَقَةِ الْقَفْزِ الطَّوِيلِ وَلَمْ يَفُزْ بِأَيِّ جَائِزَةٍ.", correct: false }
+                    { text: "صَحِيح (True)", correct: true },
+                    { text: "خَطَأ (False)", correct: false }
                 ]
             },
             {
-                question: "مَنْ خَسِرَ فِي الْمُسَابَقَةِ، وَمَا السَّبَبُ فِي ذَلِكَ؟",
+                question: "أَصْدِقَاءُ آدَمَ يُحِبُّونَ الْأَفْلَامَ الْكُومِيدِيَّةَ.",
                 options: [
-                    { text: "خَسِرَ الطَّالِبُ نَفْسُهُ فِي الْمُسَابَقَةِ لِأَنَّهُ كَانَ مَرِيضًا يَوْمَهَا.", correct: false },
-                    { text: "خَسِرَ الْفَرِيقُ الْمُنَافِسُ لِأَنَّهُمْ لَمْ يَلْتَزِمُوا بِقَوَاعِدِ اللَّعِبِ.", correct: false },
-                    { text: "خَسِرَ صَدِيقُهُ فِي الْمُسَابَقَةِ لِأَنَّهُ سَقَطَ عَلَى الْأَرْضِ أَثْنَاءَ الْجَرْيِ.", correct: false },
-                    { text: "خَسِرَ صَدِيقُهُ فِي الْمُسَابَقَةِ لِأَنَّهُ لَمْ يَتَدَرَّبْ جَيِّدًا قَبْلَهَا.", correct: true }
+                    { text: "صَحِيح (True)", correct: true },
+                    { text: "خَطَأ (False)", correct: false }
                 ]
             },
             {
-                question: "مَا رَأْيُ الْكَاتِبِ فِي الْيَوْمِ الرِّيَاضِيِّ مُقَارَنَةً بِالْيَوْمِ الدِّرَاسِيِّ؟",
+                question: "تَذْهَبُ مَرْيَمُ إِلَى السِّينَمَا مَعَ أُسْرَتِهَا.",
                 options: [
-                    { text: "يَرَى الْكَاتِبُ أَنَّ الْيَوْمَ الرِّيَاضِيَّ أَمْتَعُ مِنَ الْيَوْمِ الدِّرَاسِيِّ.", correct: true },
-                    { text: "يَرَى الْكَاتِبُ أَنَّ الْيَوْمَ الدِّرَاسِيَّ أَمْتَعُ وَأَفْضَلُ مِنَ الْيَوْمِ الرِّيَاضِيِّ.", correct: false },
-                    { text: "يَرَى الْكَاتِبُ أَنَّ الْيَوْمَ الرِّيَاضِيَّ وَالْيَوْمَ الدِّرَاسِيَّ مُمِلَّانِ بِنَفْسِ الدَّرَجَةِ.", correct: false },
-                    { text: "يَرَى الْكَاتِبُ أَنَّ الْيَوْمَ الرِّيَاضِيَّ مُخَصَّصٌ فَقَطْ لِلَّاعِبِينَ الْمُحْتَرِفِينَ.", correct: false }
+                    { text: "صَحِيح (True)", correct: false },
+                    { text: "خَطَأ (False)", correct: true }
+                ]
+            },
+            {
+                question: "تُشَاهِدُ مَرْيَمُ الْأَفْلَامَ الْمُفَضَّلَةَ فِي الْبَيْتِ يَوْمَ الْجُمُعَةِ.",
+                options: [
+                    { text: "صَحِيح (True)", correct: true },
+                    { text: "خَطَأ (False)", correct: false }
+                ]
+            },
+            {
+                question: "تَجْتَمِعُ الْعَائِلَةُ فِي غُرْفَةِ الْمَعِيشَةِ لِمُشَاهَدَةِ التِّلْفَازِ.",
+                options: [
+                    { text: "صَحِيح (True)", correct: true },
+                    { text: "خَطَأ (False)", correct: false }
+                ]
+            },
+            {
+                question: "تُحِبُّ مَرْيَمُ وَأُسْرَتُهَا الْأَفْلَامَ الْكُومِيدِيَّةَ.",
+                options: [
+                    { text: "صَحِيح (True)", correct: true },
+                    { text: "خَطَأ (False)", correct: false }
                 ]
             }
         ];
@@ -237,6 +265,9 @@
                 qTitle.innerText = `${qIndex + 1}- ${q.question}`;
                 qCard.appendChild(qTitle);
 
+                const optionsWrapper = document.createElement('div');
+                optionsWrapper.className = 'options-wrapper';
+
                 // إنشاء نسخة مخلوطة من الخيارات لكل سؤال
                 const shuffledOptions = shuffleArray([...q.options]);
 
@@ -260,9 +291,10 @@
 
                     label.appendChild(input);
                     label.appendChild(span);
-                    qCard.appendChild(label);
+                    optionsWrapper.appendChild(label);
                 });
 
+                qCard.appendChild(optionsWrapper);
                 container.appendChild(qCard);
             });
         }
@@ -306,7 +338,7 @@
             });
 
             const resultBox = document.getElementById('result-box');
-            resultBox.innerText = `Score: You got ${score} out of 5`;
+            resultBox.innerText = `Score: You got ${score} out of ${questionsData.length}`;
             resultBox.style.display = 'block';
 
             setTimeout(() => {

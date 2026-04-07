@@ -7,7 +7,7 @@
     <title>استخرج من النص</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Simplified Arabic', Tahoma, sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Simplified Arabic', Tahoma, sans-serif !important; }
         
         body {
             background-color: #f3f4f6; 
@@ -34,7 +34,7 @@
         }
 
         .sidebar {
-            width: 300px;
+            width: 320px;
             background-color: #ffffff;
             padding: 10px 15px; 
             display: flex;
@@ -112,7 +112,7 @@
             pointer-events: none;
             transition: opacity 0.2s ease;
             z-index: 50;
-            font-family: Tahoma, sans-serif;
+            font-family: Tahoma, sans-serif !important;
         }
         .category-btn::before {
             content: '';
@@ -144,7 +144,7 @@
         
         .cat-label-container {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             gap: 6px;
         }
 
@@ -153,6 +153,7 @@
             color: #000000;
             font-weight: bold; 
             white-space: nowrap; 
+            line-height: 1.2;
         } 
         
         .cat-status { 
@@ -160,6 +161,7 @@
             font-weight: bold;
             display: none; 
             white-space: nowrap;
+            margin-top: 5px;
         }
 
         .submit-btn {
@@ -185,7 +187,7 @@
         }
 
         .reading-text {
-            font-size: 28px; 
+            font-size: 32px; 
             line-height: 2; 
             color: #000000;
             text-align: justify;
@@ -214,10 +216,10 @@
             <div class="title-container">
                 <h2 class="title">
                     اسْتَخْرِج مِن النَّصِّ
-                    <span style="display: block; font-size: 14px; font-weight: normal; color: #6b7280; font-family: Tahoma, sans-serif; margin-top: 4px; line-height: 1;">Extract from the text</span>
+                    <span style="display: block; font-size: 14px; font-weight: normal; color: #6b7280; font-family: Tahoma, sans-serif !important; margin-top: 4px; line-height: 1;">Extract from the text</span>
                 </h2>
             </div>
-            <p class="instruction">Click an item to hear it & select 1 matching word in the text. Click Submit when done.</p>
+            <p class="instruction">Click an item to hear it & select matching words in the text (you can select multiple). Click Submit when done.</p>
             
             <div class="categories-list" id="categories-container"></div>
             
@@ -231,15 +233,13 @@
 
     <script>
         let categories = [
-            { id: 'c1', label: 'فِعْلًا مُضَارِعًا', en: 'Present tense verb', color: '#3b82f6' },
-            { id: 'c2', label: 'فِعْلًا مَاضِيًا', en: 'Past tense verb', color: '#22c55e' },
-            { id: 'c3', label: 'أُسْلُوبَ تَمَنِّي', en: 'Wishing style', color: '#f59e0b' },
-            { id: 'c4', label: 'أُسْلُوبَ نَفْيٍ', en: 'Negative style', color: '#8b5cf6' },
-            { id: 'c5', label: 'مُرَادِفَ (جِدًّا)', en: 'Synonym', color: '#06b6d4' },
-            { id: 'c6', label: 'مُرَادِفَ (لِلْأَسَفِ)', en: 'Synonym', color: '#ef4444' }, 
-            { id: 'c7', label: 'ضِدَّ (فازَ)', en: 'Antonym', color: '#ec4899' },
-            { id: 'c8', label: 'مُفْرَدَ (مُسَابَقَاتٍ)', en: 'Singular', color: '#14b8a6' },
-            { id: 'c9', label: 'مُفْرَدَ (المِيدَالِيَاتِ)', en: 'Singular', color: '#84cc16' }
+            { id: 'c1', label: 'فِعْل مُضَارِع', en: 'Present tense verb', count: 9, color: '#3b82f6' },
+            { id: 'c2', label: 'صِفَات', en: 'Adjectives', count: 9, color: '#22c55e' },
+            { id: 'c3', label: 'اسْم جَمْع', en: 'Plural noun', count: 7, color: '#f59e0b' },
+            { id: 'c4', label: 'ظَرْف تَكْرَار', en: 'Adverb of frequency', count: 2, color: '#8b5cf6' },
+            { id: 'c5', label: 'ضَمِير', en: 'Pronoun', count: 2, color: '#06b6d4' },
+            { id: 'c6', label: 'حَرْف جَر', en: 'Preposition', count: 7, color: '#14b8a6' },
+            { id: 'c7', label: 'رَوَابِط', en: 'Conjunctions / Linkers', count: 6, color: '#ef4444' }
         ];
 
         function shuffleArray(array) {
@@ -253,15 +253,13 @@
         shuffleArray(categories);
 
         const rawAnswers = {
-            'c1': ['يَحْصُلْ', 'يَتَدَرَّبْ', 'أَرْجُو', 'أُشَارِكَ'],
-            'c2': ['أَقَامَتْ', 'كَانَ', 'وَكَانَ', 'شَارَكْتُ', 'فُزْتُ', 'وَفُزْتُ', 'حَصَلْتُ', 'خَسِرَ'],
-            'c3': ['أَرْجُو أَنْ أُشَارِكَ مَرَّةً أُخْرَى العَامَ القَادِمَ'], 
-            'c4': ['وَلَمْ يَحْصُلْ عَلَى أَيِّ مِيدَالِيَّةٍ', 'لَمْ يَحْصُلْ عَلَى أَيِّ مِيدَالِيَّةٍ'], 
-            'c5': ['لِلْغَايَةِ'],
-            'c6': ['لِسُوءِ الحَظِّ'], 
-            'c7': ['خَسِرَ'],
-            'c8': ['مُسَابَقَةِ', 'المُسَابَقَةِ'],
-            'c9': ['المِيدَالِيَّةِ', 'مِيدَالِيَّةٍ']
+            'c1': ['أَذْهَبُ', 'لِنُشَاهِدَ', 'أُحِبُّ', 'يُحِبُّونَ', 'أُشَاهِدُ', 'نَجْتَمِعُ', 'لِنَقْضِيَ', 'نُحِبُّ', 'نَكْرَهُ'],
+            'c2': ['الْمُثِيرَةَ', 'مَلِيئَةٌ', 'الْكُومِيدِيَّةَ', 'مُضْحِكَةٌ', 'مُسَلِّيَةٌ', 'كُومِيدِيًّا', 'مُمْتِعًا', 'مُخِيفَةٌ'],
+            'c3': ['أَصْدِقَائِي', 'الْأَفْلَامَ', 'أَفْلَامَ'],
+            'c4': ['عَادَةً'],
+            'c5': ['أَنَا'],
+            'c6': ['فِي', 'إِلَى', 'عَلَى', 'مَعَ'],
+            'c7': ['لِأَنَّهَا', 'عَلَى الْعَكْسِ تَمَامًا', 'حَيْثُ', 'وَعَلَى الْعَكْسِ تَمَامًا']
         };
 
         function normalizeArabic(text) {
@@ -282,9 +280,8 @@
         const correctAnswers = {};
         for (let catId in rawAnswers) correctAnswers[catId] = rawAnswers[catId].map(normalizeArabic);
 
-        let rawText = `جَدِيرٌ بِالذِّكْرِ أَنَّ الشَّهْرَ المَاضِي أَقَامَتْ مَدْرَسَةُ كُلِّيَّةِ جُمِيرَا اليَوْمَ الرِّيَاضِيَّ فِي المَدِينَةِ الرِّيَاضِيَّةِ فِي دُبَي، وَكَانَ يَوْمًا رَائِعًا وَمُمْتِعًا لِلْغَايَةِ. <br><br> وَمِنَ المُدْهِشِ أَنَّنِي شَارَكْتُ فِي مُسَابَقَةِ الجَرْيِ، وَفُزْتُ بِالمَرْكَزِ الأَوَّلِ، كَمَا أَنَّنِي حَصَلْتُ عَلَى المِيدَالِيَّةِ الذَّهَبِيَّةِ، لَكِنَّ لِسُوءِ الحَظِّ خَسِرَ صَدِيقِي فِي المُسَابَقَةِ وَلَمْ يَحْصُلْ عَلَى أَيِّ مِيدَالِيَّةٍ؛ لِأَنَّهُ لَمْ يَتَدَرَّبْ جَيِّدًا. أَرْجُو أَنْ أُشَارِكَ مَرَّةً أُخْرَى العَامَ القَادِمَ. فِي رَأْيِي، اليَوْمُ الرِّيَاضِيُّ أَمْتَعُ مِنَ اليَوْمِ الدِّرَاسِيِّ.`;
+        let rawText = `<span style="color: #2563eb;">آدَمُ</span> : عَادَةً فِي وَقْتِ فَرَاغِي، أَذْهَبُ إِلَى السِّينَمَا مَعَ أَصْدِقَائِي لِنُشَاهِدَ الْأَفْلَامَ الْمُثِيرَةَ. أَنَا أُحِبُّ أَفْلَامَ الْحَرَكَةِ وَالْمُغَامَرَةِ لِأَنَّهَا مَلِيئَةٌ بِالْإِثَارَةِ وَالتَّشْوِيقِ، عَلَى الْعَكْسِ تَمَامًا أَصْدِقَائِي يُحِبُّونَ الْأَفْلَامَ الْكُومِيدِيَّةَ لِأَنَّهَا مُضْحِكَةٌ وَمُسَلِّيَةٌ. <br><br> <span style="color: #ef4444;">سَارَةُ</span> : عَادَةً كُلَّ جُمُعَةٍ، أُشَاهِدُ أَنَا وَعَائِلَتِي فِيلْمًا كُومِيدِيًّا عَلَى شَاشَةِ التِّلْفَازِ حَيْثُ نَجْتَمِعُ فِي غُرْفَةِ الْمَعِيشَةِ لِنَقْضِيَ وَقْتًا مُمْتِعًا مَعًا. نُحِبُّ الْأَفْلَامَ الْكُومِيدِيَّةَ وَعَلَى الْعَكْسِ تَمَامًا نَكْرَهُ أَفْلَامَ الرُّعْبِ لِأَنَّهَا مُخِيفَةٌ.`;
 
-        // إزالة خاصية الدمج وجعل كل كلمة في النص فردية ومستقلة تماماً
         let processedHTML = rawText.replace(/([\u0600-\u06FF]+)/g, '<span class="word">$1</span>');
 
         const textContainer = document.getElementById('text-container');
@@ -298,17 +295,17 @@
         const categoriesContainer = document.getElementById('categories-container');
         let activeCategoryId = null;
         let activeColor = null;
-        let userSelections = {}; // يخزن مصفوفة من العناصر (الكلمات) لكل تصنيف
-        let phraseSpanGroups = []; // لحفظ الكلمات التي تشكل الجمل المطلوبة
+        let userSelections = {}; 
+        categories.forEach(cat => userSelections[cat.id] = []);
+        let phraseSpanGroups = []; 
 
-        // إعداد مجموعات الجمل المخفية لتسهيل اختيار الجملة كاملة بضغطة واحدة
         let allWordSpans = Array.from(document.querySelectorAll('.word'));
         let spanWords = allWordSpans.map(s => normalizeArabic(s.textContent));
 
         Object.keys(correctAnswers).forEach(catId => {
             correctAnswers[catId].forEach(ans => {
                 let normAnsWords = ans.split(' ');
-                if (normAnsWords.length > 1) { // إذا كانت الإجابة جملة وليست كلمة واحدة
+                if (normAnsWords.length > 1) { 
                     let len = normAnsWords.length;
                     for (let i = 0; i <= spanWords.length - len; i++) {
                         let match = true;
@@ -352,7 +349,10 @@
                 <span class="dot" style="background-color: ${cat.color};"></span>
                 <div class="cat-text-container">
                     <div class="cat-label-container">
-                        <span class="cat-label">${cat.label}</span>
+                        <div style="display:flex; flex-direction:column;">
+                            <span class="cat-label">${cat.label}</span>
+                            <span style="font-size: 11px; color: #6b7280; font-family: Tahoma, sans-serif !important; direction: ltr; margin-top: 0px;">${cat.count} possible answers</span>
+                        </div>
                         <span class="cat-status" id="status-${cat.id}"></span>
                     </div>
                 </div>
@@ -375,16 +375,13 @@
             activeColor = color;
         }
 
-        // دالة مسؤولة عن تلوين الكلمات بناءً على الاختيارات
         function updateSpanColors() {
-            // إزالة الألوان من جميع الكلمات أولاً
             allWordSpans.forEach(s => {
                 s.style.backgroundColor = "";
                 s.style.borderBottomColor = "transparent";
             });
 
-            // ترتيب الفئات لتلوين الجمل الكبيرة أولاً ثم الكلمات الفردية فوقها
-            let activeCats = categories.filter(cat => userSelections[cat.id]);
+            let activeCats = categories.filter(cat => userSelections[cat.id] && userSelections[cat.id].length > 0);
             activeCats.sort((a, b) => userSelections[b.id].length - userSelections[a.id].length);
 
             activeCats.forEach(cat => {
@@ -403,23 +400,36 @@
                 }
                 
                 let isPhraseCategory = correctAnswers[activeCategoryId].some(ans => ans.includes(' '));
-                let selectedSpans = [this]; // الافتراضي: اختيار الكلمة التي تم الضغط عليها فقط
+                let selectedSpansGroup = [this]; 
 
-                // إذا كان المطلوب هو جملة (مثل النفي أو التمني) وتم الضغط على أي كلمة من كلماتها، تتظلل كلها
                 if (isPhraseCategory) {
                     let possibleGroups = phraseSpanGroups.filter(g => g.catId === activeCategoryId && g.spans.includes(this));
                     if (possibleGroups.length > 0) {
-                        possibleGroups.sort((a,b) => b.spans.length - a.spans.length); // اختيار أطول تطابق للجملة
-                        selectedSpans = possibleGroups[0].spans;
+                        possibleGroups.sort((a,b) => b.spans.length - a.spans.length);
+                        selectedSpansGroup = possibleGroups[0].spans;
                     }
                 }
 
-                userSelections[activeCategoryId] = selectedSpans;
+                let currentSelections = userSelections[activeCategoryId] || [];
+                let isAlreadySelected = selectedSpansGroup.every(s => currentSelections.includes(s));
+
+                if (isAlreadySelected) {
+                    userSelections[activeCategoryId] = currentSelections.filter(s => !selectedSpansGroup.includes(s));
+                } else {
+                    selectedSpansGroup.forEach(s => {
+                        if (!currentSelections.includes(s)) currentSelections.push(s);
+                    });
+                    userSelections[activeCategoryId] = currentSelections;
+                }
                 
                 let statusEl = document.getElementById(`status-${activeCategoryId}`);
-                statusEl.innerText = " (تم الاختيار)";
-                statusEl.style.color = "#3b82f6";
-                statusEl.style.display = 'inline-block';
+                if (userSelections[activeCategoryId].length > 0) {
+                    statusEl.innerText = " (تم الاختيار)";
+                    statusEl.style.color = "#3b82f6";
+                    statusEl.style.display = 'inline-block';
+                } else {
+                    statusEl.style.display = 'none';
+                }
 
                 updateSpanColors();
             };
@@ -434,21 +444,24 @@
             let cats = categories.slice();
             cats.forEach(cat => {
                 let isPhrase = correctAnswers[cat.id].some(ans => ans.includes(' '));
-                if (isPhrase) {
-                    let group = phraseSpanGroups.find(g => g.catId === cat.id);
-                    if (group) {
-                        group.spans.forEach(span => {
-                            span.style.borderBottom = `3px dashed ${cat.color}`;
-                            span.style.backgroundColor = hexToRgba(cat.color, 0.15);
-                        });
+
+                // تظليل الإجابات المفردة الصحيحة
+                allWordSpans.forEach(span => {
+                    let cleanWord = normalizeArabic(span.textContent);
+                    if (correctAnswers[cat.id].includes(cleanWord)) {
+                        span.style.borderBottom = `3px solid ${cat.color}`;
+                        span.style.backgroundColor = hexToRgba(cat.color, 0.4);
                     }
-                } else {
-                    allWordSpans.forEach(span => {
-                        let cleanWord = normalizeArabic(span.textContent);
-                        if (correctAnswers[cat.id].includes(cleanWord)) {
-                            span.style.borderBottom = `3px dashed ${cat.color}`;
-                            span.style.backgroundColor = hexToRgba(cat.color, 0.15);
-                        }
+                });
+
+                // تظليل العبارات الكاملة الصحيحة
+                if (isPhrase) {
+                    let groups = phraseSpanGroups.filter(g => g.catId === cat.id);
+                    groups.forEach(group => {
+                        group.spans.forEach(span => {
+                            span.style.borderBottom = `3px solid ${cat.color}`;
+                            span.style.backgroundColor = hexToRgba(cat.color, 0.4);
+                        });
                     });
                 }
             });
@@ -460,12 +473,29 @@
             
             categories.forEach(cat => {
                 let statusEl = document.getElementById(`status-${cat.id}`);
-                let selectedSpans = userSelections[cat.id];
+                let selectedSpans = userSelections[cat.id] || [];
                 
-                if (selectedSpans && selectedSpans.length > 0) {
-                    // دمج الكلمات المحددة للتحقق منها
-                    let cleanCombinedWord = selectedSpans.map(s => normalizeArabic(s.textContent)).join(" ");
-                    if (correctAnswers[cat.id].includes(cleanCombinedWord)) {
+                if (selectedSpans.length > 0) {
+                    let isPhrase = correctAnswers[cat.id].some(ans => ans.includes(' '));
+                    let isCorrect = false;
+
+                    let selectedWords = selectedSpans.map(s => normalizeArabic(s.textContent));
+                    let correctWords = correctAnswers[cat.id];
+                    
+                    // احتساب درجة صحيحة إذا تم اختيار إجابة واحدة صحيحة على الأقل
+                    let validWordFound = selectedWords.some(w => correctWords.includes(w));
+
+                    if (isPhrase) {
+                        let selectedSpanSet = new Set(selectedSpans);
+                        let validPhraseFound = phraseSpanGroups.some(g => 
+                            g.catId === cat.id && g.spans.every(s => selectedSpanSet.has(s))
+                        );
+                        isCorrect = validPhraseFound || validWordFound;
+                    } else {
+                        isCorrect = validWordFound;
+                    }
+
+                    if (isCorrect) {
                         score++;
                         statusEl.innerText = ' ✔ صحيح';
                         statusEl.style.color = '#10b981';
@@ -486,6 +516,9 @@
 
             document.getElementById('submit-btn').style.display = 'none';
 
+            // إظهار كافة الإجابات الصحيحة فوراً بعد الضغط وقبل أخذ لقطة الشاشة
+            revealAllAnswers();
+
             setTimeout(() => {
                 let targetElement = document.body;
                 try {
@@ -502,14 +535,11 @@
                         link.download = `Result.png`;
                         link.href = canvas.toDataURL('image/png');
                         link.click();
-                        revealAllAnswers();
                     }).catch(err => {
                         console.error("Error generating image:", err);
-                        revealAllAnswers();
                     });
                 } else {
                     console.warn("html2canvas library not loaded.");
-                    revealAllAnswers();
                 }
             }, 600);
         }
