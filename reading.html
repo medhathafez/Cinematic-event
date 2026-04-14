@@ -187,7 +187,7 @@
             100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
         }
 
-        /* --- مساحة النص --- */
+        /* --- مساحة النص والتابات --- */
         .text-panel {
             flex-grow: 1;
             padding: 4vh 4vw;
@@ -198,6 +198,42 @@
             direction: rtl; 
             background: #ffffff;
             overflow-y: auto; 
+        }
+
+        /* --- التابات (Tabs) --- */
+        .tabs-wrapper {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 4vh;
+            width: 100%;
+            flex-wrap: wrap;
+        }
+        
+        .tab-btn {
+            padding: 10px 30px;
+            font-size: 1.5rem;
+            font-family: 'Simplified Arabic', sans-serif;
+            font-weight: bold;
+            border: 2px solid #3b82f6;
+            background: white;
+            color: #3b82f6;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 160px;
+            text-align: center;
+        }
+        
+        .tab-btn.active {
+            background: #3b82f6;
+            color: white;
+        }
+        
+        .tab-btn:hover {
+            background: #2563eb;
+            color: white;
+            border-color: #2563eb;
         }
 
         .reading-content {
@@ -299,12 +335,16 @@
         </aside>
 
         <main class="text-panel">
+            <div class="tabs-wrapper">
+                <button id="tab-1" class="tab-btn active" onmouseover="this.innerText='Part One'" onmouseout="this.innerText='الجزء الأول'" onclick="switchTab(1)">الجزء الأول</button>
+                <button id="tab-2" class="tab-btn" onmouseover="this.innerText='Part Two'" onmouseout="this.innerText='الجزء الثاني'" onclick="switchTab(2)">الجزء الثاني</button>
+            </div>
             <div id="reading-text-container" class="reading-content"></div>
         </main>
     </div>
 
     <script>
-        const textData = [
+        const textDataPart1 = [
             {ar: "آدَمُ :", en: "Adam:", color: "#333", speaker: "male"},
             {ar: "عَادَةً", en: "usually", color: "#0284c7", speaker: "male"},
             {ar: "فِي", en: "in", color: "#333", speaker: "male"},
@@ -375,16 +415,94 @@
             {ar: "مُخِيفَةٌ.", en: "scary.", color: "#333", speaker: "female"}
         ];
 
-        const container = document.getElementById('reading-text-container');
-        let htmlContent = '';
-        textData.forEach((item, index) => {
-            if (item.ar === '<br>') {
-                htmlContent += `<div class="line-break" style="flex-basis: 100%; height: 2vh;"></div>`;
+        const textDataPart2 = [
+            {ar: "عَادَةً", en: "Usually", color: "#0284c7", speaker: "male"},
+            {ar: "فِي", en: "in", color: "#333", speaker: "male"},
+            {ar: "وَقْتِ", en: "time", color: "#333", speaker: "male"},
+            {ar: "الْفَرَاغِ", en: "free", color: "#333", speaker: "male"},
+            {ar: "أَذْهَبُ", en: "I go", color: "#333", speaker: "male"},
+            {ar: "إِلَى", en: "to", color: "#333", speaker: "male"},
+            {ar: "السِّينَمَا", en: "the cinema", color: "#333", speaker: "male"},
+            {ar: "أَحْيَانًا", en: "sometimes", color: "#333", speaker: "male"},
+            {ar: "مَعَ", en: "with", color: "#333", speaker: "male"},
+            {ar: "أَصْدِقَائِي ،", en: "my friends ,", color: "#333", speaker: "male"},
+            {ar: "بِالنِّسْبَةِ", en: "As for", color: "#16a34a", speaker: "male"},
+            {ar: "لِي", en: "me", color: "#16a34a", speaker: "male"},
+            {ar: "السِّينَمَا", en: "the cinema", color: "#333", speaker: "male"},
+            {ar: "مِنْ", en: "is of", color: "#333", speaker: "male"},
+            {ar: "أَكْثَرِ", en: "the most", color: "#333", speaker: "male"},
+            {ar: "الْفُنُونِ", en: "arts", color: "#333", speaker: "male"},
+            {ar: "مُتْعَةً،", en: "enjoyable,", color: "#333", speaker: "male"},
+            {ar: "لِأَنِّي", en: "because I", color: "#dc2626", speaker: "male"},
+            {ar: "أَعْشَقُ", en: "adore", color: "#333", speaker: "male"},
+            {ar: "الْفَنَّ", en: "art", color: "#333", speaker: "male"},
+            {ar: "بِشَكْلٍ", en: "in a way", color: "#333", speaker: "male"},
+            {ar: "عَامٍّ", en: "general", color: "#333", speaker: "male"},
+            {ar: "وَالتَّمْثِيلَ", en: "and acting", color: "#333", speaker: "male"},
+            {ar: "بِشَكْلٍ", en: "in a way", color: "#333", speaker: "male"},
+            {ar: "خَاصٍّ ،", en: "particular ,", color: "#333", speaker: "male"},
+            {ar: "كَمَا", en: "also", color: "#dc2626", speaker: "male"},
+            {ar: "أَنِّي", en: "that I am", color: "#333", speaker: "male"},
+            {ar: "مِنْ", en: "of", color: "#333", speaker: "male"},
+            {ar: "مُحِبِّي", en: "the fans of", color: "#333", speaker: "male"},
+            {ar: "الْأَفْلَامِ", en: "movies", color: "#333", speaker: "male"},
+            {ar: "السِّينَمَائِيَّةِ", en: "cinematic", color: "#333", speaker: "male"},
+            {ar: "خَاصَّةً", en: "especially", color: "#333", speaker: "male"},
+            {ar: "أَفْلَامَ", en: "movies", color: "#333", speaker: "male"},
+            {ar: "الْحَرَكَةِ", en: "action", color: "#333", speaker: "male"},
+            {ar: "وَالْقِتَالِ", en: "and fighting", color: "#333", speaker: "male"},
+            {ar: "لِأَنَّهَا", en: "because they are", color: "#dc2626", speaker: "male"},
+            {ar: "مُمْتِعَةٌ", en: "enjoyable", color: "#333", speaker: "male"},
+            {ar: "وَالتَّمْثِيلُ", en: "and the acting", color: "#333", speaker: "male"},
+            {ar: "بِهَا", en: "in them", color: "#333", speaker: "male"},
+            {ar: "مُثِيرٌ ،", en: "is exciting ,", color: "#333", speaker: "male"},
+            {ar: "أَيْضًا", en: "also", color: "#dc2626", speaker: "male"},
+            {ar: "أَنَا", en: "I", color: "#333", speaker: "male"},
+            {ar: "مِنْ", en: "am of", color: "#333", speaker: "male"},
+            {ar: "مُحِبِّي", en: "the fans of", color: "#333", speaker: "male"},
+            {ar: "الْمُمَثِّلِ", en: "the actor", color: "#333", speaker: "male"},
+            {ar: "الرَّائِعِ", en: "the wonderful", color: "#333", speaker: "male"},
+            {ar: "تُومْ", en: "Tom", color: "#333", speaker: "male"},
+            {ar: "كُرُوز", en: "Cruise", color: "#333", speaker: "male"},
+            {ar: "لِأَنَّهُ", en: "because he is", color: "#dc2626", speaker: "male"},
+            {ar: "مُتَمَيِّزٌ", en: "distinguished", color: "#333", speaker: "male"},
+            {ar: "فِي", en: "in", color: "#333", speaker: "male"},
+            {ar: "هَذَا", en: "this", color: "#333", speaker: "male"},
+            {ar: "النَّوْعِ", en: "type", color: "#333", speaker: "male"},
+            {ar: "مِنَ", en: "of", color: "#333", speaker: "male"},
+            {ar: "الْأَفْلَامِ.", en: "movies.", color: "#333", speaker: "male"}
+        ];
+
+        let currentData = textDataPart1;
+
+        function renderText() {
+            const container = document.getElementById('reading-text-container');
+            let htmlContent = '';
+            currentData.forEach((item, index) => {
+                if (item.ar === '<br>') {
+                    htmlContent += `<div class="line-break" style="flex-basis: 100%; height: 2vh;"></div>`;
+                } else {
+                    htmlContent += `<span id="word-${index}" class="word" data-en="${item.en}" data-speaker="${item.speaker}" style="color: ${item.color};" onclick="speakWord('${item.ar.replace(/[،.!؛:]/g, '')}', '${item.speaker}')">${item.ar}</span>`;
+                }
+            });
+            container.innerHTML = htmlContent;
+        }
+
+        function switchTab(tabNum) {
+            window.speechSynthesis.cancel();
+            resetListenButton();
+
+            document.getElementById('tab-1').classList.remove('active');
+            document.getElementById('tab-2').classList.remove('active');
+            document.getElementById(`tab-${tabNum}`).classList.add('active');
+
+            if (tabNum === 1) {
+                currentData = textDataPart1;
             } else {
-                htmlContent += `<span id="word-${index}" class="word" data-en="${item.en}" data-speaker="${item.speaker}" style="color: ${item.color};" onclick="speakWord('${item.ar.replace(/[،.!؛:]/g, '')}', '${item.speaker}')">${item.ar}</span>`;
+                currentData = textDataPart2;
             }
-        });
-        container.innerHTML = htmlContent;
+            renderText();
+        }
 
         let currentSpeed = 0.9;
         let isRecording = false;
@@ -438,26 +556,28 @@
             btnListen.innerHTML = 'Stop ⏹️';
             btnListen.style.backgroundColor = '#ef4444';
 
-            // تقسيم النص لمجموعتين: آدم ثم سارة لتغيير الصوت
-            const adamText = textData.filter(i => i.speaker === 'male' && i.ar !== '<br>').map(i => i.ar).join(' ');
-            const sarahText = textData.filter(i => i.speaker === 'female' && i.ar !== '<br>').map(i => i.ar).join(' ');
+            // تصفية النص حسب الشخصية في الجزء المفتوح حالياً
+            const adamText = currentData.filter(i => i.speaker === 'male' && i.ar !== '<br>').map(i => i.ar).join(' ');
+            const sarahText = currentData.filter(i => i.speaker === 'female' && i.ar !== '<br>').map(i => i.ar).join(' ');
 
             const utterAdam = new SpeechSynthesisUtterance(adamText);
             utterAdam.lang = 'ar-SA';
             utterAdam.rate = currentSpeed;
             utterAdam.voice = getArabicVoice('male');
 
-            const utterSarah = new SpeechSynthesisUtterance(sarahText);
-            utterSarah.lang = 'ar-SA';
-            utterSarah.rate = currentSpeed;
-            utterSarah.voice = getArabicVoice('female');
+            let utterSarah = null;
+            if (sarahText.length > 0) {
+                utterSarah = new SpeechSynthesisUtterance(sarahText);
+                utterSarah.lang = 'ar-SA';
+                utterSarah.rate = currentSpeed;
+                utterSarah.voice = getArabicVoice('female');
+            }
 
             // وظيفة التظليل أثناء القراءة
             const highlightWords = (utterance, offset) => {
                 utterance.onboundary = (event) => {
                     if (event.name === 'word') {
                         document.querySelectorAll('.word').forEach(el => el.classList.remove('highlight'));
-                        // حساب التقريبي للكلمة الحالية للتظليل
                         const wordsInUtterance = utterance.text.split(' ');
                         let charCount = 0;
                         for (let i = 0; i < wordsInUtterance.length; i++) {
@@ -472,15 +592,26 @@
                 };
             };
 
-            // تشغيل جزء آدم ثم سارة
             highlightWords(utterAdam, 0);
+            
             utterAdam.onend = () => {
                 if(isReadingFullText) {
-                    highlightWords(utterSarah, 35); // يبدأ جزء سارة من الفهرس 35 تقريباً
-                    window.speechSynthesis.speak(utterSarah);
+                    if (utterSarah) {
+                        // حساب بداية جزء سارة ديناميكياً ليناسب الجزئين الأول والثاني
+                        let sarahOffset = currentData.findIndex(i => i.speaker === 'female');
+                        if (sarahOffset === -1) sarahOffset = 35; // الاحتياط في حال لم يُعثر عليها
+                        
+                        highlightWords(utterSarah, sarahOffset);
+                        window.speechSynthesis.speak(utterSarah);
+                    } else {
+                        resetListenButton();
+                    }
                 }
             };
-            utterSarah.onend = resetListenButton;
+            
+            if (utterSarah) {
+                utterSarah.onend = resetListenButton;
+            }
 
             window.speechSynthesis.speak(utterAdam);
         }
@@ -492,7 +623,7 @@
             document.querySelectorAll('.word').forEach(el => el.classList.remove('highlight'));
         }
 
-        // --- نظام التسجيل (لا تغيير فيه) ---
+        // --- نظام التسجيل ---
         let mediaRecorder, audioChunks = [], audioUrl = null, studentAudio = new Audio();
         const btnRecord = document.getElementById('btn-record'), btnPlayMine = document.getElementById('btn-play-mine'), btnSubmit = document.getElementById('btn-submit');
 
@@ -532,6 +663,9 @@
         }
         studentAudio.onended = () => btnPlayMine.innerHTML = 'Play 🎧';
         function downloadRecording() { if (audioUrl) { const a = document.createElement('a'); a.href = audioUrl; a.download = 'Reading_Activity.webm'; a.click(); } }
+
+        // تهيئة العرض المبدئي
+        renderText();
     </script>
 </body>
 </html>

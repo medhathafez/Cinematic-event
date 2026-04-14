@@ -13,7 +13,7 @@
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             display: flex;
             justify-content: center;
-            padding: 10px; /* تم تقليل الحواف الخارجية لزيادة مساحة العرض */
+            padding: 10px; 
             color: #333;
         }
 
@@ -25,21 +25,33 @@
         }
 
         .main-header {
-            text-align: center; padding: 10px; /* تم تقليل المسافة */
+            text-align: center; padding: 10px; 
             background: #fff;
             color: #667eea; border-bottom: 2px solid #f0f4f8;
         }
-        /* تم تصغير حجم الخط للعنوان قليلاً */
         .main-header h1 { font-size: clamp(1.4rem, 4vw, 1.8rem); font-weight: bold; }
 
-        /* ================= التابات ================= */
+        /* ================= التابات الرئيسية (الجزء الأول والثاني) ================= */
+        .main-tabs { display: flex; background: #e2e8f0; padding: 6px; gap: 6px; border-bottom: 2px solid #cbd5e0; }
+        .main-tab-btn {
+            flex: 1; font-family: inherit; font-size: clamp(0.9rem, 2.5vw, 1.05rem); font-weight: bold;
+            color: #4a5568; background: transparent; border: none; padding: 6px 5px; border-radius: 8px;
+            cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center;
+        }
+        .main-tab-btn.active {
+            color: #fff; background: #4a5568; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .main-tab-btn .en-text { display: none; font-family: Arial, sans-serif; direction: ltr; font-weight: bold;}
+        .main-tab-btn:hover .ar-text, .main-tab-btn:active .ar-text { display: none; }
+        .main-tab-btn:hover .en-text, .main-tab-btn:active .en-text { display: block; animation: fadeIn 0.3s ease-in-out; }
+
+        /* ================= التابات الفرعية (الأنشطة) ================= */
         .tabs { display: flex; background: #f0f4f8; padding: 6px; gap: 6px; flex-wrap: wrap; }
         .tab-btn {
             flex: 1; min-width: 90px; font-family: inherit; 
-            /* تم تصغير حجم خط التابات */
-            font-size: clamp(1rem, 3vw, 1.2rem);
+            font-size: clamp(0.9rem, 3vw, 1.1rem);
             font-weight: bold; color: #555; background: transparent; border: none;
-            padding: 8px 5px; /* تم تقليل المسافة الداخلية للأزرار */
+            padding: 8px 5px; 
             border-radius: 12px; cursor: pointer; transition: 0.3s;
             display: flex; align-items: center; justify-content: center;
         }
@@ -47,11 +59,9 @@
             color: #fff; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             box-shadow: 0 4px 10px rgba(102, 126, 234, 0.4);
         }
-        /* تم تقليل الحد الأدنى للارتفاع لتقليل التمرير */
         .tab-content { display: none; flex-direction: column; padding: 15px; min-height: 350px; }
         .tab-content.active { display: flex; animation: fadeIn 0.4s ease-in-out; }
 
-        /* تبديل لغة التابات */
         .en-text { display: none; font-family: Arial, sans-serif; direction: ltr; font-weight: bold;}
         .tab-btn:hover .ar-text, .tab-btn:active .ar-text { display: none; }
         .tab-btn:hover .en-text, .tab-btn:active .en-text { display: block; animation: fadeIn 0.3s ease-in-out; }
@@ -68,7 +78,6 @@
 
         /* ================= التاب الأول: البطاقات (3D) ================= */
         .flashcard-area { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; }
-        /* تم تقليل المسافة السفلية لرفع أزرار التنقل لأعلى */
         .scene { width: 100%; max-width: 320px; height: 210px; perspective: 1000px; margin-bottom: 15px; position: relative;}
         .card {
             width: 100%; height: 100%; position: relative; transition: transform 0.6s;
@@ -83,7 +92,6 @@
         .card-front { background: #fff; border: 4px solid #667eea; }
         .card-back { background: #667eea; color: #fff; transform: rotateY(180deg); direction: ltr; border: 4px solid #fff;}
         
-        /* أيقونة الصوت */
         .audio-icon {
             position: absolute; top: 10px; right: 10px; font-size: 1.3rem;
             background: #e2e8f0; border-radius: 50%; width: 35px; height: 35px;
@@ -97,7 +105,6 @@
         .card-en-text { font-size: 1.8rem; font-family: Arial, sans-serif; }
 
         .nav-buttons { display: flex; gap: 15px; width: 100%; justify-content: center; direction: ltr; flex-wrap: wrap; }
-        /* تم تصغير أزرار التنقل قليلاً */
         .nav-btn {
             background: #e2e8f0; color: #4a5568; border: none; padding: 8px 16px;
             font-size: 1.1rem; font-weight: bold; border-radius: 10px; cursor: pointer;
@@ -154,12 +161,10 @@
         }
         .drop-zone.over { background: #ebf4ff; border-color: #667eea; }
         
-        /* تأثيرات التحقق من الإجابات */
         .drop-zone.correct-drop { border: 2px solid #48bb78 !important; background: #c6f6d5 !important; }
         .drop-zone.wrong-drop { border: 2px solid #f56565 !important; background: #fed7d7 !important; }
 
         .instruction-note { text-align: center; color: #718096; font-size: 0.95rem; margin-bottom: 5px; font-family: Arial, sans-serif; direction: ltr; }
-        
         .hidden { display: none !important; }
     </style>
 </head>
@@ -170,8 +175,17 @@
             <h1>حَدَثٌ سينِمائِيّ 🍿</h1>
         </div>
 
+        <div class="main-tabs">
+            <button class="main-tab-btn active" onclick="switchPart(1, event)">
+                <span class="ar-text">الجزء الأول</span><span class="en-text">Part One</span>
+            </button>
+            <button class="main-tab-btn" onclick="switchPart(2, event)">
+                <span class="ar-text">الجزء الثاني</span><span class="en-text">Part Two</span>
+            </button>
+        </div>
+
         <div class="tabs">
-            <button class="tab-btn active" onclick="openTab(event, 'tab-study')">
+            <button class="tab-btn active" onclick="openTab(event, 'tab-study')" id="btn-study">
                 <span class="ar-text">ادرس</span><span class="en-text">Study</span>
             </button>
             <button class="tab-btn" onclick="openTab(event, 'tab-mcq'); initMCQ();">
@@ -212,8 +226,7 @@
                 </div>
                 <p class="instruction-note" style="margin-bottom: 15px;">Choose the correct answer</p>
                 <div class="mcq-word" id="mcq-question">Word</div>
-                <div class="options-grid" id="mcq-options">
-                    </div>
+                <div class="options-grid" id="mcq-options"></div>
                 <div class="mcq-feedback" id="mcq-feedback"></div>
             </div>
             <div id="mcq-end-screen" class="mcq-container hidden" style="justify-content: center;">
@@ -228,11 +241,8 @@
                 <div class="quiz-status" id="quiz-score-display">Score: 0 / 10</div>
                 <p class="instruction-note">Drag the word or click it, then click on the appropriate box</p>
                 
-                <div class="word-bank" id="word-bank">
-                    </div>
-
-                <div class="drop-rows-container" id="drop-rows">
-                    </div>
+                <div class="word-bank" id="word-bank"></div>
+                <div class="drop-rows-container" id="drop-rows"></div>
                 
                 <div style="text-align: center;">
                     <button class="btn-action hidden" id="check-quiz-btn" onclick="evaluateQuiz()">Check Answers</button>
@@ -244,8 +254,8 @@
     </div>
 
     <script>
-        // ================= البيانات الجديدة: حدث سينمائي =================
-        const vocabData = [
+        // ================= بيانات الجزء الأول =================
+        const vocabData1 = [
             { ar: "عادَةً", en: "usually", icon: "🔄" },
             { ar: "فِي وَقْتِ فَرَاغِي", en: "in my free time", icon: "⏳" },
             { ar: "السّينِما", en: "cinema", icon: "🍿" },
@@ -286,6 +296,43 @@
             { ar: "تافِه", en: "trivial", icon: "😒" }
         ];
 
+        // ================= بيانات الجزء الثاني (المفردات الجديدة مضبوطة بالشكل) =================
+        const vocabData2 = [
+            { ar: "بِالنِّسْبَةِ لِي", en: "according to me", icon: "🙋‍♂️" },
+            { ar: "الفُنُون", en: "arts", icon: "🎨" },
+            { ar: "أَكْثَرُ مُتْعَةً", en: "more interesting", icon: "✨" },
+            { ar: "أَعْشَقُ", en: "I love passionately", icon: "😍" },
+            { ar: "بِشَكْلٍ عامّ", en: "in general", icon: "🌐" },
+            { ar: "بِشَكْلٍ خَاصّ - خُصُوصًا", en: "especially", icon: "🎯" },
+            { ar: "مِنْ مُحِبِّي", en: "a fan of", icon: "🌟" },
+            { ar: "التَّمْثِيل", en: "acting", icon: "🎭" },
+            { ar: "المُمَثِّل", en: "actor", icon: "🕺" },
+            { ar: "المُمَثِّلَة", en: "actress", icon: "💃" },
+            { ar: "مُتَمَيِّز / مُتَمَيِّزَة", en: "distinguished", icon: "⭐" },
+            { ar: "بَطَلُ الفِيلْم", en: "hero", icon: "🦸‍♂️" },
+            { ar: "بَطَلَةُ الفِيلْم", en: "heroine", icon: "🦸‍♀️" }
+        ];
+
+        let currentVocabData = vocabData1;
+
+        // وظيفة التبديل بين الأجزاء الرئيسية
+        function switchPart(partNum, evt) {
+            // إزالة الكلاس النشط من جميع تابات الأجزاء الرئيسية
+            const mainBtns = document.getElementsByClassName("main-tab-btn");
+            for(let i=0; i<mainBtns.length; i++) {
+                mainBtns[i].classList.remove("active");
+            }
+            evt.currentTarget.classList.add("active");
+
+            // تبديل قاعدة البيانات الحالية
+            currentVocabData = (partNum === 1) ? vocabData1 : vocabData2;
+            
+            // إعادة التهيئة والعودة للتاب الأول (ادرس)
+            currentCardIndex = 0;
+            document.getElementById('btn-study').click();
+            updateCardDisplay();
+        }
+
         // وظائف مساعدة
         function shuffleArray(array) {
             let curId = array.length;
@@ -309,8 +356,8 @@
                 btns[i].classList.remove("active");
             }
             document.getElementById(tabName).classList.add("active");
-            evt.currentTarget.classList.add("active");
-            window.speechSynthesis.cancel(); // إيقاف الصوت عند تغيير التاب
+            if(evt) evt.currentTarget.classList.add("active");
+            window.speechSynthesis.cancel(); 
         }
 
         // ================= برمجة التاب الأول (البطاقات والصوت) =================
@@ -320,10 +367,10 @@
         function updateCardDisplay() {
             cardElement.classList.remove('is-flipped');
             setTimeout(() => {
-                document.getElementById('cardIcon').innerText = vocabData[currentCardIndex].icon;
-                document.getElementById('cardAr').innerText = vocabData[currentCardIndex].ar;
-                document.getElementById('cardEn').innerText = vocabData[currentCardIndex].en;
-                document.getElementById('cardCounter').innerText = `${currentCardIndex + 1} / ${vocabData.length}`;
+                document.getElementById('cardIcon').innerText = currentVocabData[currentCardIndex].icon;
+                document.getElementById('cardAr').innerText = currentVocabData[currentCardIndex].ar;
+                document.getElementById('cardEn').innerText = currentVocabData[currentCardIndex].en;
+                document.getElementById('cardCounter').innerText = `${currentCardIndex + 1} / ${currentVocabData.length}`;
             }, 150);
         }
 
@@ -332,25 +379,24 @@
         }
 
         function playAudio(e) {
-            e.stopPropagation(); // منع قلب البطاقة عند الضغط على الصوت
-            window.speechSynthesis.cancel(); // إيقاف أي صوت سابق
+            e.stopPropagation(); 
+            window.speechSynthesis.cancel(); 
             
-            // قراءة الكلمة العربية
-            let utterance = new SpeechSynthesisUtterance(vocabData[currentCardIndex].ar);
+            let utterance = new SpeechSynthesisUtterance(currentVocabData[currentCardIndex].ar);
             utterance.lang = 'ar-SA';
-            utterance.rate = 0.8; // سرعة متوسطة
+            utterance.rate = 0.8; 
             window.speechSynthesis.speak(utterance);
         }
 
         function nextCard() {
-            window.speechSynthesis.cancel(); // إيقاف الصوت عند التالي
-            currentCardIndex = (currentCardIndex + 1) % vocabData.length;
+            window.speechSynthesis.cancel(); 
+            currentCardIndex = (currentCardIndex + 1) % currentVocabData.length;
             updateCardDisplay();
         }
 
         function prevCard() {
-            window.speechSynthesis.cancel(); // إيقاف الصوت عند السابق
-            currentCardIndex = (currentCardIndex - 1 + vocabData.length) % vocabData.length;
+            window.speechSynthesis.cancel(); 
+            currentCardIndex = (currentCardIndex - 1 + currentVocabData.length) % currentVocabData.length;
             updateCardDisplay();
         }
 
@@ -367,16 +413,18 @@
             document.getElementById('mcq-game-area').classList.remove('hidden');
             document.getElementById('mcq-end-screen').classList.add('hidden');
             
-            let shuffled = shuffleArray([...vocabData]);
-            mcqQueue = shuffled.slice(0, mcqTotalQuestions).map(item => ({...item, attempts: 0}));
-            mcqScore = 10; 
+            let shuffled = shuffleArray([...currentVocabData]);
+            // التأكد من أن العدد لا يتجاوز عدد الكلمات المتاحة
+            let maxQuestions = Math.min(mcqTotalQuestions, shuffled.length);
+            mcqQueue = shuffled.slice(0, maxQuestions).map(item => ({...item, attempts: 0}));
+            mcqScore = maxQuestions; 
             
-            loadNextMCQ();
+            loadNextMCQ(maxQuestions);
         }
 
-        function loadNextMCQ() {
+        function loadNextMCQ(maxQuestions = mcqTotalQuestions) {
             if (mcqQueue.length === 0) {
-                endMCQ();
+                endMCQ(maxQuestions);
                 return;
             }
 
@@ -385,12 +433,12 @@
             document.getElementById('mcq-question').innerText = mcqCurrentItem.en;
             document.getElementById('mcq-score-display').innerText = `Score: ${mcqScore}`;
             
-            let completed = mcqTotalQuestions - mcqQueue.length + 1;
-            document.getElementById('mcq-progress').innerText = `${completed} / ${mcqTotalQuestions}`;
+            let completed = maxQuestions - mcqQueue.length + 1;
+            document.getElementById('mcq-progress').innerText = `${completed} / ${maxQuestions}`;
             document.getElementById('mcq-feedback').innerText = '';
 
             let options = [mcqCurrentItem.ar];
-            let allArWords = vocabData.map(v => v.ar).filter(w => w !== mcqCurrentItem.ar);
+            let allArWords = currentVocabData.map(v => v.ar).filter(w => w !== mcqCurrentItem.ar);
             shuffleArray(allArWords);
             options.push(allArWords[0], allArWords[1], allArWords[2]);
             shuffleArray(options);
@@ -402,12 +450,12 @@
                 let btn = document.createElement('button');
                 btn.className = 'option-btn';
                 btn.innerText = opt;
-                btn.onclick = () => checkMCQAnswer(btn, opt);
+                btn.onclick = () => checkMCQAnswer(btn, opt, maxQuestions);
                 optionsContainer.appendChild(btn);
             });
         }
 
-        function checkMCQAnswer(btn, selectedWord) {
+        function checkMCQAnswer(btn, selectedWord, maxQuestions) {
             if (mcqLock) return;
             mcqLock = true;
 
@@ -419,7 +467,7 @@
                 feedback.style.color = "#48bb78";
                 
                 mcqQueue.shift();
-                setTimeout(loadNextMCQ, 1000);
+                setTimeout(() => loadNextMCQ(maxQuestions), 1000);
             } else {
                 btn.classList.add('wrong');
                 feedback.innerText = "❌ خطأ! ستظهر الكلمة لاحقاً";
@@ -433,29 +481,35 @@
                 let item = mcqQueue.shift();
                 mcqQueue.push(item);
                 
-                setTimeout(loadNextMCQ, 1500);
+                setTimeout(() => loadNextMCQ(maxQuestions), 1500);
             }
         }
 
-        function endMCQ() {
+        function endMCQ(maxQuestions) {
             document.getElementById('mcq-game-area').classList.add('hidden');
             document.getElementById('mcq-end-screen').classList.remove('hidden');
-            document.getElementById('mcq-final-score').innerText = `Your Final Score: ${mcqScore} / 10`;
+            document.getElementById('mcq-final-score').innerText = `Your Final Score: ${mcqScore} / ${maxQuestions}`;
         }
 
         // ================= برمجة التاب الثالث (الاختبار - سحب وإفلات) =================
         let selectedChipNode = null; 
+        let currentQuizQuestionsCount = 10;
 
         function initQuiz() {
             document.getElementById('check-quiz-btn').classList.add('hidden');
             document.getElementById('play-again-quiz-btn').classList.add('hidden');
-            document.getElementById('quiz-score-display').innerText = `Score: 0 / 10`;
-            document.getElementById('quiz-score-display').style.color = "#555";
             selectedChipNode = null;
 
-            let shuffledPool = shuffleArray([...vocabData]);
-            let bankWords = shuffledPool.slice(0, 13);
-            let questionWords = shuffleArray([...bankWords]).slice(0, 10);
+            let shuffledPool = shuffleArray([...currentVocabData]);
+            // تحديد العدد بناءً على المتوفر (الجزء الثاني يحوي 13، الجزء الأول يحوي 38)
+            let takeCount = Math.min(13, shuffledPool.length);
+            currentQuizQuestionsCount = Math.min(10, takeCount);
+
+            document.getElementById('quiz-score-display').innerText = `Score: 0 / ${currentQuizQuestionsCount}`;
+            document.getElementById('quiz-score-display').style.color = "#555";
+
+            let bankWords = shuffledPool.slice(0, takeCount);
+            let questionWords = shuffleArray([...bankWords]).slice(0, currentQuizQuestionsCount);
 
             const bankContainer = document.getElementById('word-bank');
             bankContainer.innerHTML = '';
@@ -598,7 +652,7 @@
         function checkQuizReady() {
             const filledCount = document.querySelectorAll('.drop-zone.filled').length;
             const btnCheck = document.getElementById('check-quiz-btn');
-            if (filledCount === 10) {
+            if (filledCount === currentQuizQuestionsCount) {
                 btnCheck.classList.remove('hidden');
             } else {
                 btnCheck.classList.add('hidden');
@@ -628,8 +682,8 @@
             });
 
             const scoreDisplay = document.getElementById('quiz-score-display');
-            scoreDisplay.innerText = `Final Score: ${score} / 10`;
-            scoreDisplay.style.color = score >= 5 ? '#48bb78' : '#f56565';
+            scoreDisplay.innerText = `Final Score: ${score} / ${currentQuizQuestionsCount}`;
+            scoreDisplay.style.color = score >= (currentQuizQuestionsCount / 2) ? '#48bb78' : '#f56565';
             
             const remainingChips = document.querySelectorAll('.word-bank .word-chip');
             remainingChips.forEach(c => {

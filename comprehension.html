@@ -23,6 +23,53 @@
             max-width: 900px; 
             margin: 0 auto; 
         }
+
+        /* تنسيقات التبويبات (Tabs) */
+        .tabs-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            background-color: #ffffff;
+            color: #374151;
+            border: 2px solid #d1d5db;
+            padding: 10px 30px;
+            border-radius: 8px;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: 'Simplified Arabic', serif;
+            transition: all 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .tab-btn:hover {
+            background-color: #f3f4f6;
+            border-color: #9ca3af;
+        }
+
+        .tab-btn.active {
+            background-color: #1e40af;
+            color: white;
+            border-color: #1e3a8a;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
         
         #capture-area {
             background-color: #ffffff;
@@ -57,7 +104,7 @@
         }
 
         .reading-text {
-            font-size: 22px; 
+            font-size: 24px; 
             line-height: 1.8;
             background-color: #fffbeb;
             padding: 15px;
@@ -85,16 +132,22 @@
         }
 
         .question-title {
-            font-size: 22px; 
+            font-size: 24px; 
             font-weight: bold; 
             margin-bottom: 12px; 
             color: #111827;
         }
 
-        /* تنسيقات الخيارات في نفس السطر */
+        /* تنسيقات الخيارات */
         .options-wrapper {
             display: flex;
             justify-content: space-between;
+            gap: 15px;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 15px;
         }
 
@@ -109,9 +162,10 @@
             border-radius: 8px; 
             cursor: pointer; 
             transition: all 0.2s;
-            font-size: 20px; 
+            font-size: 22px; 
             font-weight: bold; 
             line-height: 1.5;
+            text-align: center;
         }
         
         .option-label:hover { border-color: #9ca3af; background-color: #f3f4f6; }
@@ -119,20 +173,21 @@
         input[type="radio"]:checked + span { color: #2563eb; }
         .option-label.selected { border-color: #2563eb; background-color: #eff6ff; }
 
-        /* الألوان بعد التقييم */
         .option-label.correct { border-color: #10b981; background-color: #ecfdf5; color: #065f46; }
         .option-label.wrong { border-color: #ef4444; background-color: #fef2f2; color: #991b1b; }
 
         .submit-btn {
             background-color: #10b981; color: white; border: none;
-            padding: 12px 30px; border-radius: 50px; font-size: 22px;
+            padding: 12px 30px; border-radius: 50px; font-size: 24px;
             font-weight: bold; cursor: pointer; display: block;
             margin: 0 auto; width: 100%; max-width: 300px;
             font-family: 'Simplified Arabic', serif;
+            transition: 0.3s;
         }
         .submit-btn:hover { background-color: #059669; }
+        .submit-btn:disabled { background-color: #9ca3af; cursor: not-allowed; opacity: 0.8; }
 
-        #result-box {
+        #result-box, #result-box-part2 {
             display: none;
             text-align: center;
             margin-top: 15px;
@@ -146,16 +201,22 @@
             direction: ltr;
         }
 
+        @media (max-width: 768px) {
+            .options-grid { grid-template-columns: 1fr; }
+        }
+
         @media (max-width: 600px) {
             #capture-area { padding: 12px; }
+            .tabs-container { gap: 10px; margin-bottom: 15px; }
+            .tab-btn { font-size: 20px; padding: 8px 15px; }
             .arabic-inst { font-size: 22px; }
             .english-inst { font-size: 16px; }
-            .reading-text { font-size: 18px; padding: 12px; }
+            .reading-text { font-size: 20px; padding: 12px; }
             .question-card { padding: 12px; margin-bottom: 12px; }
-            .question-title { font-size: 18px; margin-bottom: 10px; }
+            .question-title { font-size: 20px; margin-bottom: 10px; }
             .options-wrapper { gap: 10px; }
-            .option-label { font-size: 16px; padding: 8px; }
-            .submit-btn { font-size: 20px; padding: 10px 20px; }
+            .option-label { font-size: 18px; padding: 8px; }
+            .submit-btn { font-size: 22px; padding: 10px 20px; }
             input[type="radio"] { transform: scale(1.1); margin-left: 5px; }
         }
     </style>
@@ -163,20 +224,42 @@
 <body>
 
     <div id="main-content">
+        
+        <div class="tabs-container">
+            <button class="tab-btn active" id="btn-tab1" onclick="switchTab('tab1')">الْجُزْءُ الْأَوَّلُ</button>
+            <button class="tab-btn" id="btn-tab2" onclick="switchTab('tab2')">الْجُزْءُ الثَّانِي</button>
+        </div>
+
         <div id="capture-area">
             
-            <div class="instruction-box">
-                <p class="arabic-inst">اِخْتَرْ: صَحِيح (T) أَوْ خَطَأ (F) لِلْجُمَلِ التَّالِيَةِ عَنْ آدَم وَمَرْيَم (سَارَة)</p>
-                <p class="english-inst">Read carefully, then choose True or False (T OR F)</p>
+            <div id="tab1" class="tab-content active">
+                <div class="instruction-box">
+                    <p class="arabic-inst">اِخْتَرْ: صَحِيح (T) أَوْ خَطَأ (F) لِلْجُمَلِ التَّالِيَةِ عَنْ آدَم وَمَرْيَم (سَارَة)</p>
+                    <p class="english-inst">Read carefully, then choose True or False (T OR F)</p>
+                </div>
+
+                <div class="reading-text">
+                    <p style="color: #1e3a8a;"><strong>آدَمُ :</strong> عَادَةً فِي وَقْتِ فَرَاغِي، أَذْهَبُ إِلَى السِّينَمَا مَعَ أَصْدِقَائِي لِنُشَاهِدَ الْأَفْلَامَ الْمُثِيرَةَ. أَنَا أُحِبُّ أَفْلَامَ الْحَرَكَةِ وَالْمُغَامَرَةِ لِأَنَّهَا مَلِيئَةٌ بِالْإِثَارَةِ وَالتَّشْوِيقِ، عَلَى الْعَكْسِ تَمَامًا أَصْدِقَائِي يُحِبُّونَ الْأَفْلَامَ الْكُومِيدِيَّةَ لِأَنَّهَا مُضْحِكَةٌ وَمُسَلِّيَةٌ.</p>
+                    <p style="color: #991b1b;"><strong>سَارَةُ :</strong> عَادَةً كُلَّ جُمُعَةٍ، أُشَاهِدُ أَنَا وَعَائِلَتِي فِيلْمًا كُومِيدِيًّا عَلَى شَاشَةِ التِّلْفَازِ حَيْثُ نَجْتَمِعُ فِي غُرْفَةِ الْمَعِيشَةِ لِنُقْضِيَ وَقْتًا مُمْتِعًا مَعًا. نُحِبُّ الْأَفْلَامَ الْكُومِيدِيَّةَ وَعَلَى الْعَكْسِ تَمَامًا نَكْرَهُ أَفْلَامَ الرُّعْبِ لِأَنَّهَا مُخِيفَةٌ.</p>
+                </div>
+
+                <div id="quiz-container"></div>
+                <div id="result-box"></div>
             </div>
 
-            <div class="reading-text">
-                <p style="color: #1e3a8a;"><strong>آدَمُ :</strong> عَادَةً فِي وَقْتِ فَرَاغِي، أَذْهَبُ إِلَى السِّينَمَا مَعَ أَصْدِقَائِي لِنُشَاهِدَ الْأَفْلَامَ الْمُثِيرَةَ. أَنَا أُحِبُّ أَفْلَامَ الْحَرَكَةِ وَالْمُغَامَرَةِ لِأَنَّهَا مَلِيئَةٌ بِالْإِثَارَةِ وَالتَّشْوِيقِ، عَلَى الْعَكْسِ تَمَامًا أَصْدِقَائِي يُحِبُّونَ الْأَفْلَامَ الْكُومِيدِيَّةَ لِأَنَّهَا مُضْحِكَةٌ وَمُسَلِّيَةٌ.</p>
-                <p style="color: #991b1b;"><strong>سَارَةُ :</strong> عَادَةً كُلَّ جُمُعَةٍ، أُشَاهِدُ أَنَا وَعَائِلَتِي فِيلْمًا كُومِيدِيًّا عَلَى شَاشَةِ التِّلْفَازِ حَيْثُ نَجْتَمِعُ فِي غُرْفَةِ الْمَعِيشَةِ لِنُقْضِيَ وَقْتًا مُمْتِعًا مَعًا. نُحِبُّ الْأَفْلَامَ الْكُومِيدِيَّةَ وَعَلَى الْعَكْسِ تَمَامًا نَكْرَهُ أَفْلَامَ الرُّعْبِ لِأَنَّهَا مُخِيفَةٌ.</p>
-            </div>
+            <div id="tab2" class="tab-content">
+                <div class="instruction-box">
+                    <p class="arabic-inst">اِقْرَأِ النَّصَّ التَّالِيَ ثُمَّ اخْتَرِ الْإِجَابَةَ الصَّحِيحَةَ</p>
+                    <p class="english-inst">Read the text carefully, then choose the correct answer</p>
+                </div>
 
-            <div id="quiz-container"></div>
-            <div id="result-box"></div>
+                <div class="reading-text">
+                    <p style="color: #1e3a8a;">فِي وَقْتِ الْفَرَاغِ أَذْهَبُ إِلَى السِّينِمَا أَحْيَانًا مَعَ أَصْدِقَائِي ، بِالنِّسْبَةِ لِي السِّينِمَا مِنْ أَكْثَرِ الْفُنُونِ مُتْعَةً، لِأَنِّي أَعْشَقُ الْفَنَّ بِشَكْلٍ عَامٍّ وَالتَّمْثِيلَ بِشَكْلٍ خَاصٍّ ، كَمَا أَنِّي مِنْ مُحِبِّي الْأَفْلَامِ السِّينَمَائِيَّةِ خَاصَّةً أَفْلَامَ الْحَرَكَةِ وَالْقِتَالِ لِأَنَّهَا مُمْتِعَةٌ وَالتَّمْثِيلُ بِهَا مُثِيرٌ ، أَيْضًا أَنَا مِنْ مُحِبِّي الْمُمَثِّلِ الرَّائِعِ تُومْ كُرُوزْ لِأَنَّهُ مُتَمَيِّزٌ فِي هَذَا النَّوْعِ مِنَ الْأَفْلَامِ.</p>
+                </div>
+
+                <div id="quiz-container-part2"></div>
+                <div id="result-box-part2"></div>
+            </div>
             
         </div>
 
@@ -184,66 +267,38 @@
     </div>
 
     <script>
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            document.getElementById('btn-' + tabId).classList.add('active');
+            
+            const submitBtn = document.getElementById('submit-btn');
+            submitBtn.disabled = false;
+            submitBtn.innerText = 'إرسال وتصوير (Submit)';
+            
+            document.getElementById('result-box').style.display = 'none';
+            document.getElementById('result-box-part2').style.display = 'none';
+        }
+
         const questionsData = [
-            {
-                question: "يَذْهَبُ آدَمُ إِلَى السِّينَمَا مَعَ أُسْرَتِهِ.",
-                options: [
-                    { text: "صَحِيح (True)", correct: false },
-                    { text: "خَطَأ (False)", correct: true }
-                ]
-            },
-            {
-                question: "يُحِبُّ آدَمُ أَفْلَامَ الْحَرَكَةِ.",
-                options: [
-                    { text: "صَحِيح (True)", correct: true },
-                    { text: "خَطَأ (False)", correct: false }
-                ]
-            },
-            {
-                question: "يَذْهَبُ آدَمُ إِلَى السِّينَمَا فِي وَقْتِ فَرَاغِهِ.",
-                options: [
-                    { text: "صَحِيح (True)", correct: true },
-                    { text: "خَطَأ (False)", correct: false }
-                ]
-            },
-            {
-                question: "أَصْدِقَاءُ آدَمَ يُحِبُّونَ الْأَفْلَامَ الْكُومِيدِيَّةَ.",
-                options: [
-                    { text: "صَحِيح (True)", correct: true },
-                    { text: "خَطَأ (False)", correct: false }
-                ]
-            },
-            {
-                question: "تَذْهَبُ مَرْيَمُ إِلَى السِّينَمَا مَعَ أُسْرَتِهَا.",
-                options: [
-                    { text: "صَحِيح (True)", correct: false },
-                    { text: "خَطَأ (False)", correct: true }
-                ]
-            },
-            {
-                question: "تُشَاهِدُ مَرْيَمُ الْأَفْلَامَ الْمُفَضَّلَةَ فِي الْبَيْتِ يَوْمَ الْجُمُعَةِ.",
-                options: [
-                    { text: "صَحِيح (True)", correct: true },
-                    { text: "خَطَأ (False)", correct: false }
-                ]
-            },
-            {
-                question: "تَجْتَمِعُ الْعَائِلَةُ فِي غُرْفَةِ الْمَعِيشَةِ لِمُشَاهَدَةِ التِّلْفَازِ.",
-                options: [
-                    { text: "صَحِيح (True)", correct: true },
-                    { text: "خَطَأ (False)", correct: false }
-                ]
-            },
-            {
-                question: "تُحِبُّ مَرْيَمُ وَأُسْرَتُهَا الْأَفْلَامَ الْكُومِيدِيَّةَ.",
-                options: [
-                    { text: "صَحِيح (True)", correct: true },
-                    { text: "خَطَأ (False)", correct: false }
-                ]
-            }
+            { question: "يَذْهَبُ آدَمُ إِلَى السِّينِمَا مَعَ أُسْرَتِهِ.", options: [{ text: "صَحِيح (True)", correct: false }, { text: "خَطَأ (False)", correct: true }] },
+            { question: "يُحِبُّ آدَمُ أَفْلَامَ الْحَرَكَةِ.", options: [{ text: "صَحِيح (True)", correct: true }, { text: "خَطَأ (False)", correct: false }] },
+            { question: "يَذْهَبُ آدَمُ إِلَى السِّينِمَا فِي وَقْتِ فَرَاغِهِ.", options: [{ text: "صَحِيح (True)", correct: true }, { text: "خَطَأ (False)", correct: false }] },
+            { question: "أَصْدِقَاءُ آدَمَ يُحِبُّونَ الْأَفْلَامَ الْكُومِيدِيَّةَ.", options: [{ text: "صَحِيح (True)", correct: true }, { text: "خَطَأ (False)", correct: false }] },
+            { question: "تَذْهَبُ مَرْيَمُ إِلَى السِّينِمَا مَعَ أُسْرَتِهَا.", options: [{ text: "صَحِيح (True)", correct: false }, { text: "خَطَأ (False)", correct: true }] },
+            { question: "تُشَاهِدُ مَرْيَمُ الْأَفْلَامَ الْمُفَضَّلَةَ فِي الْبَيْتِ يَوْمَ الْجُمُعَةِ.", options: [{ text: "صَحِيح (True)", correct: true }, { text: "خَطَأ (False)", correct: false }] },
+            { question: "تَجْتَمِعُ الْعَائِلَةُ فِي غُرْفَةِ الْمَعِيشَةِ لِمُشَاهَدَةِ التِّلْفَازِ.", options: [{ text: "صَحِيح (True)", correct: true }, { text: "خَطَأ (False)", correct: false }] },
+            { question: "تُحِبُّ مَرْيَمُ وَأُسْرَتُهَا الْأَفْلَامَ الْكُومِيدِيَّةَ.", options: [{ text: "صَحِيح (True)", correct: true }, { text: "خَطَأ (False)", correct: false }] }
         ];
 
-        // دالة لخلط المصفوفة (الخيارات) بشكل عشوائي
+        const questionsDataPart2 = [
+            { question: "مَتَى يَذْهَبُ الْكَاتِبُ إِلَى السِّينِمَا عَادَةً؟", options: [{ text: "فِي وَقْتِ فَرَاغِهِ لِلِاسْتِمْتَاعِ بِمُشَاهَدَةِ الْأَفْلَامِ.", correct: true }, { text: "كُلَّ يَوْمٍ بَعْدَ الِانْتِهَاءِ مِنَ الْعَمَلِ أَوِ الدِّرَاسَةِ.", correct: false }, { text: "فِي عُطْلَةِ نِهَايَةِ الْأُسْبُوعِ مَعَ عَائِلَتِهِ فَقَطْ.", correct: false }, { text: "فِي أَوْقَاتِ عَمَلِهِ عِنْدَمَا يَشْعُرُ بِالْمَلَلِ.", correct: false }] },
+            { question: "مَعَ مَنْ يَذْهَبُ الْكَاتِبُ إِلَى السِّينِمَا كَمَا فُهِمَ مِنَ النَّصِّ؟", options: [{ text: "يَذْهَبُ أَحْيَانًا مَعَ أَصْدِقَائِهِ لِمُشَاهَدَةِ الْعُرُوضِ السِّينَمَائِيَّةِ.", correct: true }, { text: "يَذْهَبُ وَحِيدًا لِأَنَّهُ يُحِبُّ الِاسْتِمْتَاعَ بِالْفَنِّ بِمُفْرَدِهِ.", correct: false }, { text: "يُرَافِقُ عَائِلَتَهُ دَائِمًا فِي رِحْلَاتِهِ إِلَى السِّينِمَا.", correct: false }, { text: "يَذْهَبُ مَعَ زُمَلَائِهِ فِي الْعَمَلِ بَعْدَ الدَّوَامِ الرَّسْمِيِّ.", correct: false }] },
+            { question: "عَلِّلْ: يُفَضِّلُ الْكَاتِبُ أَفْلَامَ الْحَرَكَةِ وَالْقِتَالِ.", options: [{ text: "لِأَنَّهَا أَفْلَامٌ مُمْتِعَةٌ وَيَتَمَيَّزُ التَّمْثِيلُ فِيهَا بِالْإِثَارَةِ.", correct: true }, { text: "لِأَنَّهَا تُسَاعِدُهُ عَلَى الشُّعُورِ بِالِاسْتِرْخَاءِ وَالْهُدُوءِ.", correct: false }, { text: "لِأَنَّهَا النَّوْعُ الْوَحِيدُ الَّذِي يُعْرَضُ فِي السِّينِمَا دَائِمًا.", correct: false }, { text: "لِأَنَّ أَصْدِقَاءَهُ يُجْبِرُونَهُ عَلَى مُشَاهَدَتِهَا فِي كُلِّ مَرَّةٍ.", correct: false }] }
+        ];
+
         function shuffleArray(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -255,60 +310,85 @@
         function renderQuiz() {
             const container = document.getElementById('quiz-container');
             container.innerHTML = '';
-
             questionsData.forEach((q, qIndex) => {
                 const qCard = document.createElement('div');
                 qCard.className = 'question-card';
-                
                 const qTitle = document.createElement('div');
                 qTitle.className = 'question-title';
                 qTitle.innerText = `${qIndex + 1}- ${q.question}`;
                 qCard.appendChild(qTitle);
-
                 const optionsWrapper = document.createElement('div');
                 optionsWrapper.className = 'options-wrapper';
-
-                // إنشاء نسخة مخلوطة من الخيارات لكل سؤال
                 const shuffledOptions = shuffleArray([...q.options]);
-
-                shuffledOptions.forEach((opt, optIndex) => {
+                shuffledOptions.forEach((opt) => {
                     const label = document.createElement('label');
                     label.className = 'option-label';
-                    
                     const input = document.createElement('input');
                     input.type = 'radio';
                     input.name = `question-${qIndex}`;
                     input.value = opt.correct; 
-                    
                     input.addEventListener('change', () => {
-                        const allLabels = qCard.querySelectorAll('.option-label');
-                        allLabels.forEach(l => l.classList.remove('selected'));
+                        qCard.querySelectorAll('.option-label').forEach(l => l.classList.remove('selected'));
                         label.classList.add('selected');
                     });
-
                     const span = document.createElement('span');
                     span.innerText = opt.text;
-
                     label.appendChild(input);
                     label.appendChild(span);
                     optionsWrapper.appendChild(label);
                 });
+                qCard.appendChild(optionsWrapper);
+                container.appendChild(qCard);
+            });
+        }
 
+        function renderQuizPart2() {
+            const container = document.getElementById('quiz-container-part2');
+            container.innerHTML = '';
+            questionsDataPart2.forEach((q, qIndex) => {
+                const qCard = document.createElement('div');
+                qCard.className = 'question-card';
+                const qTitle = document.createElement('div');
+                qTitle.className = 'question-title';
+                qTitle.innerText = `${qIndex + 1}- ${q.question}`;
+                qCard.appendChild(qTitle);
+                const optionsWrapper = document.createElement('div');
+                optionsWrapper.className = 'options-wrapper options-grid';
+                const shuffledOptions = shuffleArray([...q.options]);
+                shuffledOptions.forEach((opt) => {
+                    const label = document.createElement('label');
+                    label.className = 'option-label';
+                    const input = document.createElement('input');
+                    input.type = 'radio';
+                    input.name = `question2-${qIndex}`;
+                    input.value = opt.correct; 
+                    input.addEventListener('change', () => {
+                        qCard.querySelectorAll('.option-label').forEach(l => l.classList.remove('selected'));
+                        label.classList.add('selected');
+                    });
+                    const span = document.createElement('span');
+                    span.innerText = opt.text;
+                    label.appendChild(input);
+                    label.appendChild(span);
+                    optionsWrapper.appendChild(label);
+                });
                 qCard.appendChild(optionsWrapper);
                 container.appendChild(qCard);
             });
         }
 
         renderQuiz();
+        renderQuizPart2();
 
         document.getElementById('submit-btn').addEventListener('click', () => {
-            const allQuestions = document.querySelectorAll('.question-card');
+            const activeTabId = document.querySelector('.tab-content.active').id;
+            const containerSelector = activeTabId === 'tab1' ? '#tab1' : '#tab2';
+            const allQuestions = document.querySelectorAll(`${containerSelector} .question-card`);
             let answeredAll = true;
             let score = 0;
 
             allQuestions.forEach(card => {
-                const selected = card.querySelector('input[type="radio"]:checked');
-                if (!selected) answeredAll = false;
+                if (!card.querySelector('input[type="radio"]:checked')) answeredAll = false;
             });
 
             if (!answeredAll) {
@@ -316,14 +396,16 @@
                 return;
             }
 
-            document.getElementById('submit-btn').style.display = 'none';
+            // التعديل هنا: منعنا إخفاء الزر، بل قمنا بتعطيله وتغيير نصه لتجنب تغيير تخطيط الصفحة
+            const submitBtn = document.getElementById('submit-btn');
+            submitBtn.disabled = true;
+            submitBtn.innerText = 'جاري إعداد الصورة...';
 
             allQuestions.forEach(card => {
                 const inputs = card.querySelectorAll('input[type="radio"]');
                 inputs.forEach(input => {
                     input.disabled = true;
                     const label = input.closest('label');
-                    
                     if (input.value === "true") {
                         label.classList.add('correct'); 
                     } else if (input.checked && input.value === "false") {
@@ -332,24 +414,34 @@
                 });
                 
                 const selected = card.querySelector('input[type="radio"]:checked');
-                if (selected && selected.value === "true") {
-                    score++;
-                }
+                if (selected && selected.value === "true") score++;
             });
 
-            const resultBox = document.getElementById('result-box');
-            resultBox.innerText = `Score: You got ${score} out of ${questionsData.length}`;
+            const resultBox = activeTabId === 'tab1' ? document.getElementById('result-box') : document.getElementById('result-box-part2');
+            const totalQuestions = activeTabId === 'tab1' ? questionsData.length : questionsDataPart2.length;
+            resultBox.innerText = `Score: You got ${score} out of ${totalQuestions}`;
             resultBox.style.display = 'block';
 
+            // إعطاء المتصفح وقتاً صغيراً جداً ليظهر النتيجة
             setTimeout(() => {
                 const captureArea = document.getElementById('capture-area');
-                html2canvas(captureArea, { backgroundColor: "#ffffff", scale: 2 }).then(canvas => {
+                
+                // التعديل السحري لمعالجة الشاشة البيضاء في html2canvas
+                html2canvas(captureArea, { 
+                    backgroundColor: "#ffffff", 
+                    scale: 3, 
+                    useCORS: true,
+                    scrollY: -window.scrollY // هذا السطر يمنع مشكلة القص والشاشة البيضاء أثناء النزول بالصفحة
+                }).then(canvas => {
                     const link = document.createElement('a');
-                    link.download = `Activity_Result.png`;
-                    link.href = canvas.toDataURL("image/png");
+                    link.download = `Activity_${activeTabId}_Result.png`;
+                    link.href = canvas.toDataURL("image/png", 1.0);
                     link.click();
+                    
+                    // إعادة الزر لشكله الطبيعي بعد انتهاء التحميل
+                    submitBtn.innerText = 'تم الإرسال والتصوير بنجاح';
                 });
-            }, 1000);
+            }, 500);
         });
     </script>
 </body>

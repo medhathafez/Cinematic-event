@@ -20,21 +20,102 @@
             overflow-x: hidden;
         }
 
+        .main-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 1400px;
+        }
+
+        /* تنسيق التبويبات الجديد */
+        .tabs-wrapper {
+            display: flex;
+            justify-content: center;
+            flex-direction: row-reverse; /* التعديل: جعل الجزء الأول على اليمين */
+            gap: 15px;
+            margin-top: 20px; /* التعديل: تحريك للأسفل مقدار نصف سم */
+            margin-bottom: 15px;
+            width: 100%;
+            padding: 10px;
+        }
+
+        .tab-btn {
+            padding: 6px 20px;
+            font-size: 18px;
+            font-weight: bold;
+            background-color: #ffffff;
+            color: #374151;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn:hover {
+            background-color: #f9fafb;
+        }
+
+        .tab-btn.active {
+            background-color: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+
+        /* تحويل عنوان الزر للإنجليزية عند التمرير */
+        .tab-btn::after {
+            content: attr(data-en);
+            position: absolute;
+            bottom: 100%; 
+            left: 50%;
+            transform: translateX(-50%);
+            margin-bottom: 6px;
+            background: #1f2937;
+            color: #ffffff;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 13px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+            z-index: 50;
+            font-family: Tahoma, sans-serif !important;
+        }
+
+        .tab-btn::before {
+            content: '';
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-bottom: 0px;
+            border-width: 6px;
+            border-style: solid;
+            border-color: #1f2937 transparent transparent transparent;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+            z-index: 50;
+        }
+
+        .tab-btn:hover::after, .tab-btn:hover::before { opacity: 1; }
+
         .app-container {
             display: flex;
             flex-direction: row;
             width: 100%;
-            max-width: 1400px;
             background: white;
             border-radius: 12px; 
             box-shadow: 0 5px 20px rgba(0,0,0,0.08);
             height: auto; 
-            min-height: 98vh;
+            min-height: 90vh;
             position: relative;
         }
 
         .sidebar {
-            width: 320px;
+            width: 480px; /* التعديل: جعل الحجم مرة ونصف (كان 320px) */
             background-color: #ffffff;
             padding: 10px 15px; 
             display: flex;
@@ -208,341 +289,417 @@
 </head>
 <body>
 
-    <div class="app-container" id="capture-area">
-        <aside class="sidebar">
-            <div class="score-stamp" id="score-stamp">
-                <div id="stamp-score"></div>
-            </div>
-            <div class="title-container">
-                <h2 class="title">
-                    اسْتَخْرِج مِن النَّصِّ
-                    <span style="display: block; font-size: 14px; font-weight: normal; color: #6b7280; font-family: Tahoma, sans-serif !important; margin-top: 4px; line-height: 1;">Extract from the text</span>
-                </h2>
-            </div>
-            <p class="instruction">Click an item to hear it & select matching words in the text (you can select multiple). Click Submit when done.</p>
-            
-            <div class="categories-list" id="categories-container"></div>
-            
-            <button class="submit-btn" id="submit-btn" onclick="submitQuiz()">Submit</button>
-        </aside>
+    <div class="main-wrapper">
+        <div class="tabs-wrapper">
+            <button class="tab-btn active" onclick="switchTab(1)" data-en="Part One">الجزء الأول</button>
+            <button class="tab-btn" onclick="switchTab(2)" data-en="Part Two">الجزء الثاني</button>
+        </div>
 
-        <main class="text-area">
-            <div id="text-container" class="reading-text"></div>
-        </main>
+        <div class="app-container" id="quiz-1">
+            <aside class="sidebar">
+                <div class="score-stamp">
+                    <div class="stamp-score"></div>
+                </div>
+                <div class="title-container">
+                    <h2 class="title">
+                        اسْتَخْرِج مِن النَّصِّ
+                        <span style="display: block; font-size: 14px; font-weight: normal; color: #6b7280; font-family: Tahoma, sans-serif !important; margin-top: 4px; line-height: 1;">Extract from the text</span>
+                    </h2>
+                </div>
+                <p class="instruction">Click an item to hear it & select matching words in the text (you can select multiple). Click Submit when done.</p>
+                
+                <div class="categories-list"></div>
+                
+                <button class="submit-btn">Submit</button>
+            </aside>
+
+            <main class="text-area">
+                <div class="reading-text"></div>
+            </main>
+        </div>
+
+        <div class="app-container" id="quiz-2" style="display: none;">
+            <aside class="sidebar">
+                <div class="score-stamp">
+                    <div class="stamp-score"></div>
+                </div>
+                <div class="title-container">
+                    <h2 class="title">
+                        اسْتَخْرِج مِن النَّصِّ
+                        <span style="display: block; font-size: 14px; font-weight: normal; color: #6b7280; font-family: Tahoma, sans-serif !important; margin-top: 4px; line-height: 1;">Extract from the text</span>
+                    </h2>
+                </div>
+                <p class="instruction">Click an item to hear it & select matching words in the text (you can select multiple). Click Submit when done.</p>
+                
+                <div class="categories-list"></div>
+                
+                <button class="submit-btn">Submit</button>
+            </aside>
+
+            <main class="text-area">
+                <div class="reading-text"></div>
+            </main>
+        </div>
     </div>
 
     <script>
-        let categories = [
-            { id: 'c1', label: 'فِعْل مُضَارِع', en: 'Present tense verb', count: 9, color: '#3b82f6' },
-            { id: 'c2', label: 'صِفَات', en: 'Adjectives', count: 9, color: '#22c55e' },
-            { id: 'c3', label: 'اسْم جَمْع', en: 'Plural noun', count: 7, color: '#f59e0b' },
-            { id: 'c4', label: 'ظَرْف تَكْرَار', en: 'Adverb of frequency', count: 2, color: '#8b5cf6' },
-            { id: 'c5', label: 'ضَمِير', en: 'Pronoun', count: 2, color: '#06b6d4' },
-            { id: 'c6', label: 'حَرْف جَر', en: 'Preposition', count: 7, color: '#14b8a6' },
-            { id: 'c7', label: 'رَوَابِط', en: 'Conjunctions / Linkers', count: 6, color: '#ef4444' }
-        ];
-
-        function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                let temp = array[i];
-                array[i] = array[j];
-                array[j] = temp;
-            }
-        }
-        shuffleArray(categories);
-
-        const rawAnswers = {
-            'c1': ['أَذْهَبُ', 'لِنُشَاهِدَ', 'أُحِبُّ', 'يُحِبُّونَ', 'أُشَاهِدُ', 'نَجْتَمِعُ', 'لِنَقْضِيَ', 'نُحِبُّ', 'نَكْرَهُ'],
-            'c2': ['الْمُثِيرَةَ', 'مَلِيئَةٌ', 'الْكُومِيدِيَّةَ', 'مُضْحِكَةٌ', 'مُسَلِّيَةٌ', 'كُومِيدِيًّا', 'مُمْتِعًا', 'مُخِيفَةٌ'],
-            'c3': ['أَصْدِقَائِي', 'الْأَفْلَامَ', 'أَفْلَامَ'],
-            'c4': ['عَادَةً'],
-            'c5': ['أَنَا'],
-            'c6': ['فِي', 'إِلَى', 'عَلَى', 'مَعَ'],
-            'c7': ['لِأَنَّهَا', 'عَلَى الْعَكْسِ تَمَامًا', 'حَيْثُ', 'وَعَلَى الْعَكْسِ تَمَامًا']
+        // إعدادات الجزء الأول (الكود الأصلي)
+        const quizData1 = {
+            categories: [
+                { id: 'c1', label: 'فِعْلًا مُضَارِعًا', en: 'Present tense verb', count: 9, color: '#3b82f6' },
+                { id: 'c2', label: 'صِفَات', en: 'Adjectives', count: 9, color: '#22c55e' },
+                { id: 'c3', label: 'اسْمًا جَمْعًا', en: 'Plural noun', count: 7, color: '#f59e0b' },
+                { id: 'c4', label: 'ظَرْفَ تَكْرَار', en: 'Adverb of frequency', count: 2, color: '#8b5cf6' },
+                { id: 'c5', label: 'ضَمِيرًا', en: 'Pronoun', count: 2, color: '#06b6d4' },
+                { id: 'c6', label: 'حَرْفَ جَرٍّ', en: 'Preposition', count: 7, color: '#14b8a6' },
+                { id: 'c7', label: 'رَوَابِط', en: 'Conjunctions / Linkers', count: 6, color: '#ef4444' }
+            ],
+            rawAnswers: {
+                'c1': ['أَذْهَبُ', 'لِنُشَاهِدَ', 'أُحِبُّ', 'يُحِبُّونَ', 'أُشَاهِدُ', 'نَجْتَمِعُ', 'لِنَقْضِيَ', 'نُحِبُّ', 'نَكْرَهُ'],
+                'c2': ['الْمُثِيرَةَ', 'مَلِيئَةٌ', 'الْكُومِيدِيَّةَ', 'مُضْحِكَةٌ', 'مُسَلِّيَةٌ', 'كُومِيدِيًّا', 'مُمْتِعًا', 'مُخِيفَةٌ'],
+                'c3': ['أَصْدِقَائِي', 'الْأَفْلَامَ', 'أَفْلَامَ'],
+                'c4': ['عَادَةً'],
+                'c5': ['أَنَا'],
+                'c6': ['فِي', 'إِلَى', 'عَلَى', 'مَعَ'],
+                'c7': ['لِأَنَّهَا', 'عَلَى الْعَكْسِ تَمَامًا', 'حَيْثُ', 'وَعَلَى الْعَكْسِ تَمَامًا']
+            },
+            rawText: `<span style="color: #2563eb;">آدَمُ</span> : عَادَةً فِي وَقْتِ فَرَاغِي، أَذْهَبُ إِلَى السِّينَمَا مَعَ أَصْدِقَائِي لِنُشَاهِدَ الْأَفْلَامَ الْمُثِيرَةَ. أَنَا أُحِبُّ أَفْلَامَ الْحَرَكَةِ وَالْمُغَامَرَةِ لِأَنَّهَا مَلِيئَةٌ بِالْإِثَارَةِ وَالتَّشْوِيقِ، عَلَى الْعَكْسِ تَمَامًا أَصْدِقَائِي يُحِبُّونَ الْأَفْلَامَ الْكُومِيدِيَّةَ لِأَنَّهَا مُضْحِكَةٌ وَمُسَلِّيَةٌ. <br><br> <span style="color: #ef4444;">سَارَةُ</span> : عَادَةً كُلَّ جُمُعَةٍ، أُشَاهِدُ أَنَا وَعَائِلَتِي فِيلْمًا كُومِيدِيًّا عَلَى شَاشَةِ التِّلْفَازِ حَيْثُ نَجْتَمِعُ فِي غُرْفَةِ الْمَعِيشَةِ لِنَقْضِيَ وَقْتًا مُمْتِعًا مَعًا. نُحِبُّ الْأَفْلَامَ الْكُومِيدِيَّةَ وَعَلَى الْعَكْسِ تَمَامًا نَكْرَهُ أَفْلَامَ الرُّعْبِ لِأَنَّهَا مُخِيفَةٌ.`
         };
 
-        function normalizeArabic(text) {
-            return text.split(/\s+/).map(word => {
-                let w = word.replace(/[\u064B-\u065F\u0640]/g, "") 
-                           .replace(/[أإآٱ]/g, "ا") 
-                           .replace(/ة/g, "ه") 
-                           .replace(/[يى]/g, "ي") 
-                           .replace(/[،.؛؟!"'-]/g, "");
-                
-                if (w.length > 3 && w.startsWith("ال")) w = w.substring(2);
-                else if (w.length > 4 && (w.startsWith("وال") || w.startsWith("فال") || w.startsWith("كال") || w.startsWith("بال"))) w = w.charAt(0) + w.substring(3);
-                else if (w.length > 3 && w.startsWith("لل")) w = "ل" + w.substring(2);
-                return w;
-            }).join(" ").trim();
-        }
+        // إعدادات الجزء الثاني (النص الجديد والمطلوبات الجديدة)
+        const quizData2 = {
+            categories: [
+                { id: 't2c1', label: 'جُمْلَة افْتِتَاحِيَّة', en: 'Opening sentence', count: 1, color: '#3b82f6' },
+                { id: 't2c2', label: 'فِعْلًا مُضَارِع', en: 'Present tense verb', count: 2, color: '#22c55e' },
+                { id: 't2c3', label: 'صِفَات', en: 'Adjectives', count: 7, color: '#f59e0b' },
+                { id: 't2c4', label: 'اسْمًا جَمْعًا', en: 'Plural noun', count: 4, color: '#8b5cf6' },
+                { id: 't2c5', label: 'جَمْعَ (فِيلْم)', en: 'Plural of film', count: 2, color: '#06b6d4' },
+                { id: 't2c6', label: 'ظَرْفَ تَكْرَار', en: 'Adverb of frequency', count: 1, color: '#14b8a6' }
+            ],
+            rawAnswers: {
+                't2c1': ['ِالنِّسْبَةِ لِي'],
+                't2c2': ['أَذْهَبُ', 'أَعْشَقُ'],
+                't2c3': ['عَامٍّ', 'خَاصٍّ', 'السِّينَمَائِيَّةِ', 'مُمْتِعَةٌ', 'مُثِيرٌ', 'الرَّائِعِ', 'مُتَمَيِّزٌ'],
+                't2c4': ['أَصْدِقَائِي', 'الفُنُونِ', 'الأَفْلَامِ', 'أَفْلَامَ'],
+                't2c5': ['الأَفْلَامِ', 'أَفْلَامَ'],
+                't2c6': ['أَحْيَانًا']
+            },
+            // تم ضبط الحركات للنص الجديد بقواعد الإعراب الصحيحة
+            rawText: `فِي وَقْتِ الفَرَاغِ أَذْهَبُ إِلَى السِّينِمَا أَحْيَانًا مَعَ أَصْدِقَائِي، بِالنِّسْبَةِ لِي السِّينِمَا مِنْ أَكْثَرِ الفُنُونِ مُتْعَةً، لِأَنِّي أَعْشَقُ الفَنَّ بِشَكْلٍ عَامٍّ وَالتَّمْثِيلَ بِشَكْلٍ خَاصٍّ، كَمَا أَنِّي مِنْ مُحِبِّي الأَفْلَامِ السِّينَمَائِيَّةِ خَاصَّةً أَفْلَامَ الحَرَكَةِ وَالقِتَالِ لِأَنَّهَا مُمْتِعَةٌ وَالتَّمْثِيلُ بِهَا مُثِيرٌ، أَيْضًا أَنَا مِنْ مُحِبِّي المُمَثِّلِ الرَّائِعِ تُومْ كُرُوزْ لِأَنَّهُ مُتَمَيِّزٌ فِي هَذَا النَّوْعِ مِنَ الأَفْلَامِ.`
+        };
 
-        const correctAnswers = {};
-        for (let catId in rawAnswers) correctAnswers[catId] = rawAnswers[catId].map(normalizeArabic);
-
-        let rawText = `<span style="color: #2563eb;">آدَمُ</span> : عَادَةً فِي وَقْتِ فَرَاغِي، أَذْهَبُ إِلَى السِّينَمَا مَعَ أَصْدِقَائِي لِنُشَاهِدَ الْأَفْلَامَ الْمُثِيرَةَ. أَنَا أُحِبُّ أَفْلَامَ الْحَرَكَةِ وَالْمُغَامَرَةِ لِأَنَّهَا مَلِيئَةٌ بِالْإِثَارَةِ وَالتَّشْوِيقِ، عَلَى الْعَكْسِ تَمَامًا أَصْدِقَائِي يُحِبُّونَ الْأَفْلَامَ الْكُومِيدِيَّةَ لِأَنَّهَا مُضْحِكَةٌ وَمُسَلِّيَةٌ. <br><br> <span style="color: #ef4444;">سَارَةُ</span> : عَادَةً كُلَّ جُمُعَةٍ، أُشَاهِدُ أَنَا وَعَائِلَتِي فِيلْمًا كُومِيدِيًّا عَلَى شَاشَةِ التِّلْفَازِ حَيْثُ نَجْتَمِعُ فِي غُرْفَةِ الْمَعِيشَةِ لِنَقْضِيَ وَقْتًا مُمْتِعًا مَعًا. نُحِبُّ الْأَفْلَامَ الْكُومِيدِيَّةَ وَعَلَى الْعَكْسِ تَمَامًا نَكْرَهُ أَفْلَامَ الرُّعْبِ لِأَنَّهَا مُخِيفَةٌ.`;
-
-        let processedHTML = rawText.replace(/([\u0600-\u06FF]+)/g, '<span class="word">$1</span>');
-
-        const textContainer = document.getElementById('text-container');
-        textContainer.innerHTML = processedHTML;
-
-        function hexToRgba(hex, alpha) {
-            let r = parseInt(hex.slice(1, 3), 16), g = parseInt(hex.slice(3, 5), 16), b = parseInt(hex.slice(5, 7), 16);
-            return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-        }
-
-        const categoriesContainer = document.getElementById('categories-container');
-        let activeCategoryId = null;
-        let activeColor = null;
-        let userSelections = {}; 
-        categories.forEach(cat => userSelections[cat.id] = []);
-        let phraseSpanGroups = []; 
-
-        let allWordSpans = Array.from(document.querySelectorAll('.word'));
-        let spanWords = allWordSpans.map(s => normalizeArabic(s.textContent));
-
-        Object.keys(correctAnswers).forEach(catId => {
-            correctAnswers[catId].forEach(ans => {
-                let normAnsWords = ans.split(' ');
-                if (normAnsWords.length > 1) { 
-                    let len = normAnsWords.length;
-                    for (let i = 0; i <= spanWords.length - len; i++) {
-                        let match = true;
-                        for (let j = 0; j < len; j++) {
-                            if (spanWords[i+j] !== normAnsWords[j]) {
-                                match = false; break;
-                            }
-                        }
-                        if (match) {
-                            let group = [];
-                            for(let j = 0; j < len; j++) group.push(allWordSpans[i+j]);
-                            phraseSpanGroups.push({ catId: catId, spans: group });
-                        }
-                    }
+        // دالة التبديل بين التبويبات
+        function switchTab(tabIndex) {
+            document.querySelectorAll('.tab-btn').forEach((btn, idx) => {
+                if (idx + 1 === tabIndex) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
                 }
             });
-        });
 
-        function playCategoryAudio(text) {
-            if ('speechSynthesis' in window) {
-                window.speechSynthesis.cancel();
-                let cleanText = text.replace(/\(.*?\)/g, '').trim(); 
-                let msg = new SpeechSynthesisUtterance(cleanText);
-                msg.lang = 'ar-SA';
-                window.speechSynthesis.speak(msg);
+            document.getElementById('quiz-1').style.display = tabIndex === 1 ? 'flex' : 'none';
+            document.getElementById('quiz-2').style.display = tabIndex === 2 ? 'flex' : 'none';
+        }
+
+        // دالة التشغيل الرئيسية لضمان عمل كلا الجزئين باستقلالية تامة بنفس المنطق
+        function initQuiz(containerId, data) {
+            let categories = data.categories.slice();
+            const container = document.getElementById(containerId);
+
+            function shuffleArray(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    let temp = array[i];
+                    array[i] = array[j];
+                    array[j] = temp;
+                }
+            }
+            shuffleArray(categories);
+
+            const rawAnswers = data.rawAnswers;
+
+            function normalizeArabic(text) {
+                return text.split(/\s+/).map(word => {
+                    let w = word.replace(/[\u064B-\u065F\u0640]/g, "") 
+                               .replace(/[أإآٱ]/g, "ا") 
+                               .replace(/ة/g, "ه") 
+                               .replace(/[يى]/g, "ي") 
+                               .replace(/[،.؛؟!"'-]/g, "");
+                    
+                    if (w.length > 3 && w.startsWith("ال")) w = w.substring(2);
+                    else if (w.length > 4 && (w.startsWith("وال") || w.startsWith("فال") || w.startsWith("كال") || w.startsWith("بال"))) w = w.charAt(0) + w.substring(3);
+                    else if (w.length > 3 && w.startsWith("لل")) w = "ل" + w.substring(2);
+                    return w;
+                }).join(" ").trim();
+            }
+
+            const correctAnswers = {};
+            for (let catId in rawAnswers) correctAnswers[catId] = rawAnswers[catId].map(normalizeArabic);
+
+            let rawText = data.rawText;
+            let processedHTML = rawText.replace(/([\u0600-\u06FF]+)/g, '<span class="word">$1</span>');
+
+            const textContainer = container.querySelector('.reading-text');
+            textContainer.innerHTML = processedHTML;
+
+            function hexToRgba(hex, alpha) {
+                let r = parseInt(hex.slice(1, 3), 16), g = parseInt(hex.slice(3, 5), 16), b = parseInt(hex.slice(5, 7), 16);
+                return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+            }
+
+            const categoriesContainer = container.querySelector('.categories-list');
+            let activeCategoryId = null;
+            let activeColor = null;
+            let userSelections = {}; 
+            categories.forEach(cat => userSelections[cat.id] = []);
+            let phraseSpanGroups = []; 
+
+            let allWordSpans = Array.from(container.querySelectorAll('.word'));
+            let spanWords = allWordSpans.map(s => normalizeArabic(s.textContent));
+
+            Object.keys(correctAnswers).forEach(catId => {
+                correctAnswers[catId].forEach(ans => {
+                    let normAnsWords = ans.split(' ');
+                    if (normAnsWords.length > 1) { 
+                        let len = normAnsWords.length;
+                        for (let i = 0; i <= spanWords.length - len; i++) {
+                            let match = true;
+                            for (let j = 0; j < len; j++) {
+                                if (spanWords[i+j] !== normAnsWords[j]) {
+                                    match = false; break;
+                                }
+                            }
+                            if (match) {
+                                let group = [];
+                                for(let j = 0; j < len; j++) group.push(allWordSpans[i+j]);
+                                phraseSpanGroups.push({ catId: catId, spans: group });
+                            }
+                        }
+                    }
+                });
+            });
+
+            function playCategoryAudio(text) {
+                if ('speechSynthesis' in window) {
+                    window.speechSynthesis.cancel();
+                    let cleanText = text.replace(/\(.*?\)/g, '').trim(); 
+                    let msg = new SpeechSynthesisUtterance(cleanText);
+                    msg.lang = 'ar-SA';
+                    window.speechSynthesis.speak(msg);
+                }
+            }
+
+            categories.forEach(cat => {
+                const btn = document.createElement('div');
+                btn.className = 'category-btn';
+                btn.dataset.en = cat.en; 
+                
+                btn.onclick = () => {
+                    playCategoryAudio(cat.label);
+                    selectCategory(cat.id, cat.color, btn);
+                };
+
+                btn.innerHTML = `
+                    <span class="dot" style="background-color: ${cat.color};"></span>
+                    <div class="cat-text-container">
+                        <div class="cat-label-container">
+                            <div style="display:flex; flex-direction:column;">
+                                <span class="cat-label">${cat.label}</span>
+                                <span style="font-size: 11px; color: #6b7280; font-family: Tahoma, sans-serif !important; direction: ltr; margin-top: 0px;">${cat.count} possible answers</span>
+                            </div>
+                            <span class="cat-status" id="status-${containerId}-${cat.id}"></span>
+                        </div>
+                    </div>
+                `;
+                categoriesContainer.appendChild(btn);
+            });
+
+            function selectCategory(id, color, btnElement) {
+                Array.from(container.querySelectorAll('.category-btn')).forEach(b => {
+                    b.classList.remove('active');
+                    b.style.backgroundColor = "#ffffff";
+                    b.style.borderColor = "#f3f4f6";
+                });
+
+                btnElement.classList.add('active');
+                btnElement.style.backgroundColor = hexToRgba(color, 0.3);
+                btnElement.style.borderColor = color;
+
+                activeCategoryId = id;
+                activeColor = color;
+            }
+
+            function updateSpanColors() {
+                allWordSpans.forEach(s => {
+                    s.style.backgroundColor = "";
+                    s.style.borderBottomColor = "transparent";
+                });
+
+                let activeCats = categories.filter(cat => userSelections[cat.id] && userSelections[cat.id].length > 0);
+                activeCats.sort((a, b) => userSelections[b.id].length - userSelections[a.id].length);
+
+                activeCats.forEach(cat => {
+                    userSelections[cat.id].forEach(span => {
+                        span.style.backgroundColor = hexToRgba(cat.color, 0.3);
+                        span.style.borderBottomColor = cat.color;
+                    });
+                });
+            }
+
+            allWordSpans.forEach(span => {
+                span.onclick = function() {
+                    if (!activeCategoryId) {
+                        alert("الرجاء الضغط على المطلوب من القائمة الجانبية أولاً.");
+                        return;
+                    }
+                    
+                    let isPhraseCategory = correctAnswers[activeCategoryId].some(ans => ans.includes(' '));
+                    let selectedSpansGroup = [this]; 
+
+                    if (isPhraseCategory) {
+                        let possibleGroups = phraseSpanGroups.filter(g => g.catId === activeCategoryId && g.spans.includes(this));
+                        if (possibleGroups.length > 0) {
+                            possibleGroups.sort((a,b) => b.spans.length - a.spans.length);
+                            selectedSpansGroup = possibleGroups[0].spans;
+                        }
+                    }
+
+                    let currentSelections = userSelections[activeCategoryId] || [];
+                    let isAlreadySelected = selectedSpansGroup.every(s => currentSelections.includes(s));
+
+                    if (isAlreadySelected) {
+                        userSelections[activeCategoryId] = currentSelections.filter(s => !selectedSpansGroup.includes(s));
+                    } else {
+                        selectedSpansGroup.forEach(s => {
+                            if (!currentSelections.includes(s)) currentSelections.push(s);
+                        });
+                        userSelections[activeCategoryId] = currentSelections;
+                    }
+                    
+                    let statusEl = container.querySelector(`#status-${containerId}-${activeCategoryId}`);
+                    if (userSelections[activeCategoryId].length > 0) {
+                        statusEl.innerText = " (تم الاختيار)";
+                        statusEl.style.color = "#3b82f6";
+                        statusEl.style.display = 'inline-block';
+                    } else {
+                        statusEl.style.display = 'none';
+                    }
+
+                    updateSpanColors();
+                };
+            });
+
+            function revealAllAnswers() {
+                allWordSpans.forEach(s => {
+                    s.style.backgroundColor = "";
+                    s.style.borderBottom = "3px solid transparent";
+                });
+
+                let cats = categories.slice();
+                cats.forEach(cat => {
+                    let isPhrase = correctAnswers[cat.id].some(ans => ans.includes(' '));
+
+                    allWordSpans.forEach(span => {
+                        let cleanWord = normalizeArabic(span.textContent);
+                        if (correctAnswers[cat.id].includes(cleanWord)) {
+                            span.style.borderBottom = `3px solid ${cat.color}`;
+                            span.style.backgroundColor = hexToRgba(cat.color, 0.4);
+                        }
+                    });
+
+                    if (isPhrase) {
+                        let groups = phraseSpanGroups.filter(g => g.catId === cat.id);
+                        groups.forEach(group => {
+                            group.spans.forEach(span => {
+                                span.style.borderBottom = `3px solid ${cat.color}`;
+                                span.style.backgroundColor = hexToRgba(cat.color, 0.4);
+                            });
+                        });
+                    }
+                });
+            }
+
+            container.querySelector('.submit-btn').onclick = function() {
+                let score = 0;
+                let total = categories.length;
+                
+                categories.forEach(cat => {
+                    let statusEl = container.querySelector(`#status-${containerId}-${cat.id}`);
+                    let selectedSpans = userSelections[cat.id] || [];
+                    
+                    if (selectedSpans.length > 0) {
+                        let isPhrase = correctAnswers[cat.id].some(ans => ans.includes(' '));
+                        let isCorrect = false;
+
+                        let selectedWords = selectedSpans.map(s => normalizeArabic(s.textContent));
+                        let correctWords = correctAnswers[cat.id];
+                        
+                        let validWordFound = selectedWords.some(w => correctWords.includes(w));
+
+                        if (isPhrase) {
+                            let selectedSpanSet = new Set(selectedSpans);
+                            let validPhraseFound = phraseSpanGroups.some(g => 
+                                g.catId === cat.id && g.spans.every(s => selectedSpanSet.has(s))
+                            );
+                            isCorrect = validPhraseFound || validWordFound;
+                        } else {
+                            isCorrect = validWordFound;
+                        }
+
+                        if (isCorrect) {
+                            score++;
+                            statusEl.innerText = ' ✔ صحيح';
+                            statusEl.style.color = '#10b981';
+                        } else {
+                            statusEl.innerText = ' ✘ خطأ';
+                            statusEl.style.color = '#ef4444';
+                        }
+                    } else {
+                        statusEl.innerText = ' ✘ لم يُجب';
+                        statusEl.style.color = '#ef4444';
+                    }
+                    statusEl.style.display = 'inline-block';
+                });
+
+                let stamp = container.querySelector('.score-stamp');
+                container.querySelector('.stamp-score').innerText = `You got ${score}/${total}!`;
+                stamp.style.display = 'block';
+
+                this.style.display = 'none';
+
+                revealAllAnswers();
+
+                setTimeout(() => {
+                    let targetElement = document.body;
+                    try {
+                        if (window.parent && window.parent.document && window.parent.document.body) {
+                            targetElement = window.parent.document.body;
+                        }
+                    } catch(e) {
+                        console.log("CORS prevented capturing parent iframe. Capturing current frame instead.");
+                    }
+
+                    if (typeof html2canvas !== 'undefined') {
+                        html2canvas(targetElement, { scale: 2 }).then(canvas => {
+                            let link = document.createElement('a');
+                            link.download = `Result_${containerId}.png`;
+                            link.href = canvas.toDataURL('image/png');
+                            link.click();
+                        }).catch(err => {
+                            console.error("Error generating image:", err);
+                        });
+                    } else {
+                        console.warn("html2canvas library not loaded.");
+                    }
+                }, 600);
             }
         }
 
-        categories.forEach(cat => {
-            const btn = document.createElement('div');
-            btn.className = 'category-btn';
-            btn.id = `btn-${cat.id}`;
-            btn.dataset.en = cat.en; 
-            
-            btn.onclick = () => {
-                playCategoryAudio(cat.label);
-                selectCategory(cat.id, cat.color, btn);
-            };
+        // تهيئة التبويبات والمحتوى
+        initQuiz('quiz-1', quizData1);
+        initQuiz('quiz-2', quizData2);
 
-            btn.innerHTML = `
-                <span class="dot" style="background-color: ${cat.color};"></span>
-                <div class="cat-text-container">
-                    <div class="cat-label-container">
-                        <div style="display:flex; flex-direction:column;">
-                            <span class="cat-label">${cat.label}</span>
-                            <span style="font-size: 11px; color: #6b7280; font-family: Tahoma, sans-serif !important; direction: ltr; margin-top: 0px;">${cat.count} possible answers</span>
-                        </div>
-                        <span class="cat-status" id="status-${cat.id}"></span>
-                    </div>
-                </div>
-            `;
-            categoriesContainer.appendChild(btn);
-        });
-
-        function selectCategory(id, color, btnElement) {
-            Array.from(document.querySelectorAll('.category-btn')).forEach(b => {
-                b.classList.remove('active');
-                b.style.backgroundColor = "#ffffff";
-                b.style.borderColor = "#f3f4f6";
-            });
-
-            btnElement.classList.add('active');
-            btnElement.style.backgroundColor = hexToRgba(color, 0.3);
-            btnElement.style.borderColor = color;
-
-            activeCategoryId = id;
-            activeColor = color;
-        }
-
-        function updateSpanColors() {
-            allWordSpans.forEach(s => {
-                s.style.backgroundColor = "";
-                s.style.borderBottomColor = "transparent";
-            });
-
-            let activeCats = categories.filter(cat => userSelections[cat.id] && userSelections[cat.id].length > 0);
-            activeCats.sort((a, b) => userSelections[b.id].length - userSelections[a.id].length);
-
-            activeCats.forEach(cat => {
-                userSelections[cat.id].forEach(span => {
-                    span.style.backgroundColor = hexToRgba(cat.color, 0.3);
-                    span.style.borderBottomColor = cat.color;
-                });
-            });
-        }
-
-        allWordSpans.forEach(span => {
-            span.onclick = function() {
-                if (!activeCategoryId) {
-                    alert("الرجاء الضغط على المطلوب من القائمة الجانبية أولاً.");
-                    return;
-                }
-                
-                let isPhraseCategory = correctAnswers[activeCategoryId].some(ans => ans.includes(' '));
-                let selectedSpansGroup = [this]; 
-
-                if (isPhraseCategory) {
-                    let possibleGroups = phraseSpanGroups.filter(g => g.catId === activeCategoryId && g.spans.includes(this));
-                    if (possibleGroups.length > 0) {
-                        possibleGroups.sort((a,b) => b.spans.length - a.spans.length);
-                        selectedSpansGroup = possibleGroups[0].spans;
-                    }
-                }
-
-                let currentSelections = userSelections[activeCategoryId] || [];
-                let isAlreadySelected = selectedSpansGroup.every(s => currentSelections.includes(s));
-
-                if (isAlreadySelected) {
-                    userSelections[activeCategoryId] = currentSelections.filter(s => !selectedSpansGroup.includes(s));
-                } else {
-                    selectedSpansGroup.forEach(s => {
-                        if (!currentSelections.includes(s)) currentSelections.push(s);
-                    });
-                    userSelections[activeCategoryId] = currentSelections;
-                }
-                
-                let statusEl = document.getElementById(`status-${activeCategoryId}`);
-                if (userSelections[activeCategoryId].length > 0) {
-                    statusEl.innerText = " (تم الاختيار)";
-                    statusEl.style.color = "#3b82f6";
-                    statusEl.style.display = 'inline-block';
-                } else {
-                    statusEl.style.display = 'none';
-                }
-
-                updateSpanColors();
-            };
-        });
-
-        function revealAllAnswers() {
-            allWordSpans.forEach(s => {
-                s.style.backgroundColor = "";
-                s.style.borderBottom = "3px solid transparent";
-            });
-
-            let cats = categories.slice();
-            cats.forEach(cat => {
-                let isPhrase = correctAnswers[cat.id].some(ans => ans.includes(' '));
-
-                // تظليل الإجابات المفردة الصحيحة
-                allWordSpans.forEach(span => {
-                    let cleanWord = normalizeArabic(span.textContent);
-                    if (correctAnswers[cat.id].includes(cleanWord)) {
-                        span.style.borderBottom = `3px solid ${cat.color}`;
-                        span.style.backgroundColor = hexToRgba(cat.color, 0.4);
-                    }
-                });
-
-                // تظليل العبارات الكاملة الصحيحة
-                if (isPhrase) {
-                    let groups = phraseSpanGroups.filter(g => g.catId === cat.id);
-                    groups.forEach(group => {
-                        group.spans.forEach(span => {
-                            span.style.borderBottom = `3px solid ${cat.color}`;
-                            span.style.backgroundColor = hexToRgba(cat.color, 0.4);
-                        });
-                    });
-                }
-            });
-        }
-
-        function submitQuiz() {
-            let score = 0;
-            let total = categories.length;
-            
-            categories.forEach(cat => {
-                let statusEl = document.getElementById(`status-${cat.id}`);
-                let selectedSpans = userSelections[cat.id] || [];
-                
-                if (selectedSpans.length > 0) {
-                    let isPhrase = correctAnswers[cat.id].some(ans => ans.includes(' '));
-                    let isCorrect = false;
-
-                    let selectedWords = selectedSpans.map(s => normalizeArabic(s.textContent));
-                    let correctWords = correctAnswers[cat.id];
-                    
-                    // احتساب درجة صحيحة إذا تم اختيار إجابة واحدة صحيحة على الأقل
-                    let validWordFound = selectedWords.some(w => correctWords.includes(w));
-
-                    if (isPhrase) {
-                        let selectedSpanSet = new Set(selectedSpans);
-                        let validPhraseFound = phraseSpanGroups.some(g => 
-                            g.catId === cat.id && g.spans.every(s => selectedSpanSet.has(s))
-                        );
-                        isCorrect = validPhraseFound || validWordFound;
-                    } else {
-                        isCorrect = validWordFound;
-                    }
-
-                    if (isCorrect) {
-                        score++;
-                        statusEl.innerText = ' ✔ صحيح';
-                        statusEl.style.color = '#10b981';
-                    } else {
-                        statusEl.innerText = ' ✘ خطأ';
-                        statusEl.style.color = '#ef4444';
-                    }
-                } else {
-                    statusEl.innerText = ' ✘ لم يُجب';
-                    statusEl.style.color = '#ef4444';
-                }
-                statusEl.style.display = 'inline-block';
-            });
-
-            let stamp = document.getElementById('score-stamp');
-            document.getElementById('stamp-score').innerText = `You got ${score}/${total}!`;
-            stamp.style.display = 'block';
-
-            document.getElementById('submit-btn').style.display = 'none';
-
-            // إظهار كافة الإجابات الصحيحة فوراً بعد الضغط وقبل أخذ لقطة الشاشة
-            revealAllAnswers();
-
-            setTimeout(() => {
-                let targetElement = document.body;
-                try {
-                    if (window.parent && window.parent.document && window.parent.document.body) {
-                        targetElement = window.parent.document.body;
-                    }
-                } catch(e) {
-                    console.log("CORS prevented capturing parent iframe. Capturing current frame instead.");
-                }
-
-                if (typeof html2canvas !== 'undefined') {
-                    html2canvas(targetElement, { scale: 2 }).then(canvas => {
-                        let link = document.createElement('a');
-                        link.download = `Result.png`;
-                        link.href = canvas.toDataURL('image/png');
-                        link.click();
-                    }).catch(err => {
-                        console.error("Error generating image:", err);
-                    });
-                } else {
-                    console.warn("html2canvas library not loaded.");
-                }
-            }, 600);
-        }
     </script>
 </body>
 </html>

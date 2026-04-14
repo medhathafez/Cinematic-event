@@ -5,19 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>أنا أتحدث</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;700;900&family=Amiri:wght@700&display=swap" rel="stylesheet">
-    
     <style>
         /* ================= التنسيقات العامة ================= */
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Noto Naskh Arabic', serif;
+            font-family: 'Simplified Arabic', sans-serif;
             background-color: #f9fafb;
             min-height: 100vh; 
             display: flex;
             flex-direction: column;
             overflow-x: hidden;
+            font-size: 22px; /* تكبير الخط العام */
         }
 
         /* ================= شاشة الدخول (Welcome Screen) ================= */
@@ -47,13 +46,13 @@
         .welcome-box h2 {
             color: #1f2937;
             margin-bottom: 10px;
-            font-size: 24px;
+            font-size: 26px;
         }
 
         .welcome-box p {
             color: #6b7280;
             margin-bottom: 25px;
-            font-size: 15px;
+            font-size: 16px;
         }
 
         .welcome-box input {
@@ -61,7 +60,7 @@
             padding: 12px 15px;
             border: 2px solid #e5e7eb;
             border-radius: 8px;
-            font-size: 16px;
+            font-size: 18px;
             margin-bottom: 20px;
             outline: none;
             transition: border-color 0.3s;
@@ -77,7 +76,7 @@
             border: none;
             padding: 12px 30px;
             border-radius: 8px;
-            font-size: 18px;
+            font-size: 20px;
             font-weight: bold;
             cursor: pointer;
             width: 100%;
@@ -91,7 +90,7 @@
         .hover-translate { cursor: pointer; }
         .hover-translate .text-ar { display: inline-block; }
         .hover-translate .text-en {
-            display: none; direction: ltr; font-family: sans-serif; font-size: 0.9em; 
+            display: none; direction: ltr; font-family: sans-serif; font-size: 0.85em; 
         }
         .hover-translate:hover .text-ar, .hover-translate:active .text-ar { display: none; }
         .hover-translate:hover .text-en, .hover-translate:active .text-en { display: inline-block; }
@@ -101,10 +100,12 @@
             display: flex; justify-content: space-between; align-items: center; 
             padding: 15px 30px; width: 100%; background-color: #ffffff;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 20px;
+            flex-wrap: wrap; /* للتجاوب مع الشاشات الصغيرة */
+            gap: 15px;
         }
 
-        .top-right-group { display: flex; align-items: center; gap: 15px; }
-        .top-left-group { display: flex; align-items: center; gap: 15px; }
+        .top-right-group { display: flex; align-items: center; gap: 15px; flex-wrap: wrap;}
+        .top-left-group { display: flex; align-items: center; gap: 15px; flex-wrap: wrap;}
         .logo-img { width: 60px; height: auto; object-fit: contain; } 
 
         /* ================= حاوية أيقونة TAT ومعايير التقييم ================= */
@@ -114,10 +115,11 @@
             display: flex; justify-content: center;
         }
         .criteria-text {
-            font-family: 'Amiri', serif; font-size: 14px; color: #d97706; 
+            font-family: 'Simplified Arabic', serif; font-size: 18px; color: #d97706; 
             text-decoration: none; transition: all 0.3s ease;
             text-shadow: 0 0 3px #fcd34d, 0 0 6px #fcd34d, 0 0 10px #fbbf24;
             display: inline-block;
+            font-weight: bold;
         }
         .criteria-text:hover {
             text-shadow: 0 0 6px #fcd34d, 0 0 12px #fcd34d, 0 0 20px #fbbf24, 0 0 25px #d97706;
@@ -125,23 +127,23 @@
         }
 
         .goal-box {
-            background-color: #16a34a; color: #ffffff; font-size: 15px; font-weight: bold;
+            background-color: #16a34a; color: #ffffff; font-size: 20px; font-weight: bold;
             padding: 8px 20px; border-radius: 8px; text-align: center; cursor: pointer;
             display: flex; justify-content: center; align-items: center;
-            min-width: 420px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            min-width: auto; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
         .goal-ar { display: block; }
-        .goal-en { display: none; direction: ltr; font-family: sans-serif; font-size: 14px; }
+        .goal-en { display: none; direction: ltr; font-family: sans-serif; font-size: 16px; }
         .goal-box:hover .goal-ar { display: none; }
         .goal-box:hover .goal-en { display: block; }
 
-        .main-text { font-size: 26px; font-weight: 900; color: #1f2937; }
-        .main-icon { font-size: 26px; }
+        .main-text { font-size: 32px; font-weight: 900; color: #1f2937; }
+        .main-icon { font-size: 30px; }
 
         /* ================= التصميم الشبكي (المحتوى + الشريط الجانبي الأيسر) ================= */
         .main-layout {
             display: flex;
-            flex-direction: row; /* العناصر تترتب من اليمين لليسار بسبب dir=rtl */
+            flex-direction: row; 
             gap: 25px;
             max-width: 1200px;
             width: 100%;
@@ -152,7 +154,7 @@
 
         .content-area {
             flex: 2.5; 
-            display: flex; flex-direction: column; gap: 15px; 
+            display: flex; flex-direction: column; gap: 20px; 
         }
 
         .instructions-sidebar {
@@ -162,7 +164,7 @@
             padding: 25px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.03);
             border: 1px solid #e5e7eb;
-            direction: ltr; /* اتجاه النص من اليسار لليمين */
+            direction: ltr; 
             text-align: left;
             height: fit-content;
             font-family: sans-serif;
@@ -170,7 +172,7 @@
 
         .instructions-sidebar h3 {
             color: #111827;
-            font-size: 18px;
+            font-size: 20px;
             margin-bottom: 15px;
             border-bottom: 2px solid #f3f4f6;
             padding-bottom: 10px;
@@ -183,7 +185,7 @@
         }
 
         .instructions-sidebar li {
-            font-size: 15px;
+            font-size: 16px;
             color: #4b5563;
             margin-bottom: 15px;
             line-height: 1.5;
@@ -193,7 +195,7 @@
         }
 
         .instructions-sidebar .emoji {
-            font-size: 18px;
+            font-size: 20px;
             flex-shrink: 0;
         }
 
@@ -217,21 +219,23 @@
         /* ================= باقي تنسيقات الأسئلة ================= */
         .question-row {
             display: flex; align-items: center; justify-content: space-between;
-            background-color: #ffffff; padding: 15px 20px; border-radius: 10px;
+            background-color: #ffffff; padding: 20px; border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.03); border: 1px solid #e5e7eb; width: 100%;
+            flex-wrap: wrap; /* التجاوب مع الجوال */
+            gap: 15px;
         }
         .question-info { display: flex; align-items: center; gap: 12px; flex-grow: 1; }
         .play-q-btn {
-            background: none; border: none; font-size: 24px; cursor: pointer;
+            background: none; border: none; font-size: 28px; cursor: pointer;
             transition: transform 0.2s ease; outline: none;
         }
         .play-q-btn:hover { transform: scale(1.2); }
         .play-q-btn:active { transform: scale(0.9); }
-        .question-text { font-size: 21px; font-weight: 700; color: #111827; direction: rtl; line-height: 1.6; }
+        .question-text { font-size: 26px; font-weight: bold; color: #111827; direction: rtl; line-height: 1.6; }
 
-        .controls-area { display: flex; align-items: center; gap: 15px; }
+        .controls-area { display: flex; align-items: center; gap: 15px; flex-wrap: wrap;}
         .record-btn {
-            background-color: #3b82f6; color: white; font-size: 20px; width: 50px; height: 50px;
+            background-color: #3b82f6; color: white; font-size: 22px; width: 55px; height: 55px;
             border: none; border-radius: 50%; cursor: pointer; transition: all 0.3s;
             display: flex; justify-content: center; align-items: center;
             box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
@@ -246,13 +250,13 @@
             100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
         }
 
-        .audio-player { display: none; height: 35px; width: 200px; }
+        .audio-player { display: none; height: 40px; width: 100%; max-width: 250px; }
 
         /* ================= زر الإرسال ================= */
-        .submit-container { display: flex; justify-content: center; margin-top: 15px; }
+        .submit-container { display: flex; justify-content: center; margin-top: 20px; }
         .submit-btn {
-            background-color: #10b981; color: white; font-size: 20px; font-weight: bold;
-            font-family: 'Noto Naskh Arabic', serif; padding: 12px 40px; border: none;
+            background-color: #10b981; color: white; font-size: 24px; font-weight: bold;
+            font-family: 'Simplified Arabic', sans-serif; padding: 12px 40px; border: none;
             border-radius: 50px; cursor: pointer; box-shadow: 0 5px 15px rgba(16, 185, 129, 0.4);
             transition: all 0.3s; display: flex; align-items: center; gap: 10px;
         }
@@ -261,8 +265,12 @@
 
         /* للتجاوب مع الشاشات الصغيرة */
         @media (max-width: 900px) {
-            .main-layout { flex-direction: column; }
+            .main-layout { flex-direction: column; padding: 0 15px 20px 15px; }
             .instructions-sidebar { width: 100%; order: -1; } /* تظهر التعليمات أولاً في الجوال */
+            .top-bar { padding: 15px; justify-content: center; flex-direction: column; text-align: center; }
+            .goal-box { width: 100%; min-width: 100%; }
+            .question-row { flex-direction: column; align-items: flex-start; }
+            .controls-area { width: 100%; justify-content: space-between; }
         }
     </style>
 </head>
@@ -313,8 +321,8 @@
                 <div class="question-info">
                     <button class="play-q-btn" title="استمع للسؤال">🔊</button>
                     <div class="question-text hover-translate">
-                        <span class="text-ar">1- مَتَى أُقِيمَ الْيَوْمُ الرِّيَاضِيُّ فِي مَدْرَسَتِكَ؟</span>
-                        <span class="text-en">1- When was the sports day held at your school?</span>
+                        <span class="text-ar">1- مَتَى تَذْهَبُ إِلَى السِّينِمَا؟ مَعَ مَنْ؟</span>
+                        <span class="text-en">1- When do you go to the cinema? With whom?</span>
                     </div>
                 </div>
                 <div class="controls-area">
@@ -327,27 +335,13 @@
                 <div class="question-info">
                     <button class="play-q-btn" title="استمع للسؤال">🔊</button>
                     <div class="question-text hover-translate">
-                        <span class="text-ar">2- صِفِ الْيَوْمَ الرِّيَاضِيَّ فِي مَدْرَسَتِكَ.</span>
-                        <span class="text-en">2- Describe the sports day at your school.</span>
+                        <span class="text-ar">2- مَا الْأَفْلَامُ الْمُفَضَّلَةُ عِنْدَكَ؟ وَلِمَاذَا؟</span>
+                        <span class="text-en">2- What are your favorite movies? Why?</span>
                     </div>
                 </div>
                 <div class="controls-area">
                     <audio id="audio-2" class="audio-player" controls></audio>
                     <button class="record-btn" data-id="2" title="تسجيل/إيقاف إجابتك">🎙️</button>
-                </div>
-            </div>
-
-            <div class="question-row">
-                <div class="question-info">
-                    <button class="play-q-btn" title="استمع للسؤال">🔊</button>
-                    <div class="question-text hover-translate">
-                        <span class="text-ar">3- مَا الْمُسَابَقَاتُ الَّتِي شَارَكْتَ فِيهَا؟ وَهَلْ فُزْتَ أَمْ خَسِرْتَ؟</span>
-                        <span class="text-en">3- What competitions did you participate in? And did you win or lose?</span>
-                    </div>
-                </div>
-                <div class="controls-area">
-                    <audio id="audio-3" class="audio-player" controls></audio>
-                    <button class="record-btn" data-id="3" title="تسجيل/إيقاف إجابتك">🎙️</button>
                 </div>
             </div>
 
@@ -379,7 +373,7 @@
                 </li>
                 <li>
                     <span class="emoji">✔️</span>
-                    <span>Record answers for all 3 questions to unlock the save button.</span>
+                    <span>Record answers for all <strong>2 questions</strong> to unlock the save button.</span>
                 </li>
                 <li>
                     <span class="emoji">💾</span>
@@ -447,8 +441,8 @@
         });
 
         /* ================= تسجيل إجابات الطالب ================= */
-        const audioChunksMap = { 1: [], 2: [], 3: [] };
-        const audioBlobsMap = { 1: null, 2: null, 3: null };
+        const audioChunksMap = { 1: [], 2: [] }; // تم التعديل لسؤالين فقط
+        const audioBlobsMap = { 1: null, 2: null }; // تم التعديل لسؤالين فقط
         let mediaRecorder;
         let currentRecordingId = null;
 
@@ -457,7 +451,7 @@
         const submitText = document.getElementById('submit-text');
 
         function checkSubmitStatus() {
-            if (audioBlobsMap[1] && audioBlobsMap[2] && audioBlobsMap[3]) {
+            if (audioBlobsMap[1] && audioBlobsMap[2]) { // التحقق من سؤالين فقط
                 submitBtn.disabled = false;
             } else {
                 submitBtn.disabled = true;
@@ -585,7 +579,7 @@
             const blobsToMerge = [];
             if (audioBlobsMap[1]) blobsToMerge.push(audioBlobsMap[1]);
             if (audioBlobsMap[2]) blobsToMerge.push(audioBlobsMap[2]);
-            if (audioBlobsMap[3]) blobsToMerge.push(audioBlobsMap[3]);
+            // تم إزالة السؤال الثالث من هنا
 
             if (blobsToMerge.length === 0) return;
 
@@ -597,7 +591,7 @@
                 a.style.display = 'none';
                 a.href = url;
                 
-                a.download = `${studentName}_Speaking_Activity_Sports_Lesson.wav`; 
+                a.download = `${studentName}_Speaking_Activity_Cinema_Lesson.wav`; // تم تغيير اسم الملف
                 
                 document.body.appendChild(a);
                 a.click();
